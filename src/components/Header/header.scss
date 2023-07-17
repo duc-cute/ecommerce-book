@@ -1,0 +1,58 @@
+/** @format */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 18px auto;
+  width: 1280px;
+  padding-left: 24px;
+  padding-right: 24px;
+
+  .header-logo {
+    // flex: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    color: aqua;
+    cursor: pointer;
+    span {
+      font-size: 32px;
+      color: aqua;
+      display: flex;
+      align-items: center;
+      animation: spin infinite linear 5000ms;
+    }
+  }
+
+  .header-search {
+    flex: 1;
+    color: #000;
+    font-size: 14px;
+    ::placeholder {
+      font-size: 14px;
+    }
+    .ant-input-prefix {
+      color: aqua;
+    }
+  }
+
+  .header-account {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    .header-badge {
+      font-size: 28px;
+      color: aqua;
+      cursor: pointer;
+    }
+
+    .ant-space-item {
+      color: #888;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    // flex: 2;
+  }
+}

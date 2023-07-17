@@ -1,0 +1,79 @@
+/** @format */
+.admin-input-search {
+  background-color: #ebebeb;
+  padding: 16px 20px 28px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  .group-form {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .input-item {
+      flex: 1;
+    }
+  }
+
+  .button-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+}
+.admin-table-user {
+  font-weight: 500;
+  .ant-spin-container {
+    // margin-bottom: 24px;
+  }
+  td {
+    color: #5f5f5f;
+  }
+  overflow-y: auto;
+  max-height: 450px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .table-title {
+      font-size: 18px;
+    }
+
+    .table-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .ant-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .btn-reload {
+        font-size: 20px;
+        display: flex;
+        margin: 0 8px;
+      }
+    }
+  }
+}

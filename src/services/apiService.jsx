@@ -19,4 +19,18 @@ const fetchAccount = () => {
   return axios.get("api/v1/auth/account");
 };
 
-export { postRegister, postLogin, fetchAccount };
+const postLogout = () => {
+  return axios.post("api/v1/auth/logout");
+};
+
+const getUserWithPaginate = (current, pageSize) => {
+  return axios.get(`api/v1/user?current=${current}&pageSize=${pageSize}`);
+};
+
+export {
+  postRegister,
+  postLogin,
+  fetchAccount,
+  postLogout,
+  getUserWithPaginate,
+};

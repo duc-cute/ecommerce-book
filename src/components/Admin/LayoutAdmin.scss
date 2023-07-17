@@ -1,0 +1,38 @@
+/** @format */
+.admin-layout-container {
+  height: 100vh;
+
+  .demo-logo-vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 20px;
+    color: aqua;
+    margin: 18px 0 36px 0;
+    flex-wrap: wrap;
+    span {
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      animation: spin infinite linear 5000ms;
+    }
+  }
+
+  .ant-layout {
+    height: 100%;
+
+    .ant-layout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .ant-dropdown-trigger {
+        margin-right: 24px;
+      }
+    }
+    .ant-layout-content {
+      background-color: #f5f5f5 !important;
+    }
+  }
+}
