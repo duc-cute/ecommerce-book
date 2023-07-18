@@ -2,10 +2,6 @@
 import "./LayoutAdmin.scss";
 
 import {
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   DownOutlined,
@@ -15,8 +11,21 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { RiMoneyPoundCircleLine } from "react-icons/ri";
 
 import { useState } from "react";
-import { Layout, Menu, Button, theme, Dropdown, Space } from "antd";
-import { Outlet } from "react-router-dom";
+import {
+  Layout,
+  Menu,
+  Button,
+  theme,
+  Dropdown,
+  Space,
+  message,
+  Avatar,
+} from "antd";
+import { Outlet, useNavigate } from "react-router-dom";
+import Link from "antd/es/typography/Link";
+import { postLogout } from "../../services/apiService";
+import { useDispatch, useSelector } from "react-redux";
+import { doLogout } from "../../redux/account/accountSlice";
 
 function getItem(label, key, icon, children) {
   return {
@@ -36,23 +45,43 @@ const items = [
   getItem(<label>Manage Orders</label>, "9", <RiMoneyPoundCircleLine />),
 ];
 
-const itemsAccount = [
-  {
-    label: "Thông tin tài khoản",
-    key: "0",
-  },
-  {
-    label: "Đăng xuất",
-    key: "1",
-  },
-];
-
 const LayoutAdmin = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const { Header, Sider, Content, Footer } = Layout;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const account = useSelector((state) => state.account);
+  const url = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
+    account.user.avatar
+  }`;
+
+  const handleLogout = async () => {
+    const res = await postLogout();
+    if (res && res.data) {
+      message.success("Đăng xuất thành công");
+      dispatch(doLogout());
+      navigate("/");
+    }
+  };
+
+  const itemsAccount = [
+    {
+      label: <label onClick={() => navigate("/")}>Trang chủ</label>,
+      key: "0",
+    },
+    {
+      label: <label>Thông tin tài khoản</label>,
+      key: "1",
+    },
+    {
+      label: <label onClick={handleLogout}>Đăng xuất</label>,
+      key: "2",
+    },
+  ];
 
   return (
     <div className="admin-layout-container">
@@ -96,7 +125,7 @@ const LayoutAdmin = () => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  Welcome I'm Admin
+                  <Avatar src={url} /> {account?.user?.fullName}
                   <DownOutlined />
                 </Space>
               </a>

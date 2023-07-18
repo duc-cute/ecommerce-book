@@ -23,8 +23,14 @@ const postLogout = () => {
   return axios.post("api/v1/auth/logout");
 };
 
-const getUserWithPaginate = (current, pageSize) => {
-  return axios.get(`api/v1/user?current=${current}&pageSize=${pageSize}`);
+const getUserWithPaginate = (query) => {
+  return axios.get(`api/v1/user?${query}`);
+};
+
+const postCreateUser = (values) => {
+  return axios.post("api/v1/user", {
+    ...values,
+  });
 };
 
 export {
@@ -33,4 +39,5 @@ export {
   fetchAccount,
   postLogout,
   getUserWithPaginate,
+  postCreateUser,
 };

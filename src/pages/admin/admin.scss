@@ -18,7 +18,10 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 16px;
+    .ant-form-item-control-input-content {
+      display: flex;
+      gap: 16px;
+    }
   }
 }
 .admin-table-user {
@@ -30,7 +33,7 @@
     color: #5f5f5f;
   }
   overflow-y: auto;
-  max-height: 450px;
+  max-height: 420px;
   &::-webkit-scrollbar {
     width: 10px;
   }

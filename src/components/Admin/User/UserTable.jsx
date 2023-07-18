@@ -1,74 +1,87 @@
 /** @format */
 
-import { Button, Space, Table } from "antd";
+import { Table } from "antd";
 import { useEffect, useState } from "react";
 import { getUserWithPaginate } from "../../../services/apiService";
-import { TiPlus } from "react-icons/ti";
+import InputSearch from "./InputSearch";
+import HeaderTable from "./HeaderTable";
+import DetailUser from "./DetailUser";
+import moment from "moment";
+import ModalCreateUser from "../Modal/ModalCreateUser";
+import ModalImportUser from "../Modal/ModalImportUser";
 
-import { CgImport } from "react-icons/cg";
-import { AiOutlineCloudUpload, AiOutlineReload } from "react-icons/ai";
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "_id",
-    key: "_id",
-  },
-  {
-    title: "Tên hiển thị",
-    dataIndex: "fullName",
-    key: "fullName",
-  },
-  {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-  },
-  {
-    title: "Số điện thoại",
-    dataIndex: "phone",
-    key: "phone",
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: () => <button>delete</button>,
-  },
-];
-
-const HeaderTable = () => {
-  return (
-    <>
-      <div className="table-header">
-        <span className="table-title">Table List Users</span>
-        <div className="table-actions-group">
-          <Button type="primary" icon={<AiOutlineCloudUpload />}>
-            Export
-          </Button>
-          <Button type="primary" icon={<CgImport />}>
-            Import
-          </Button>
-          <Button type="primary" icon={<TiPlus />}>
-            Thêm mới
-          </Button>
-          <div className="btn-reload">
-            <AiOutlineReload />
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
 const UserTable = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [listUser, setListUser] = useState([]);
   const [total, setTotal] = useState(0);
 
+  const [dataViewDetail, setDataViewDetail] = useState({});
+  const [showViewDetail, setShowViewDetail] = useState(false);
+
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalImport, setOpenModalImport] = useState(true);
+
+  const [filter, setFilter] = useState("");
+  const [sortQuery, setSortQuery] = useState("");
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "_id",
+      render: (text, record, index) => {
+        return (
+          <a
+            href="#"
+            onClick={() => {
+              setShowViewDetail(true);
+              setDataViewDetail(record);
+            }}
+          >
+            {record._id}
+          </a>
+        );
+      },
+    },
+    {
+      title: "Tên hiển thị",
+      dataIndex: "fullName",
+      key: "fullName",
+      sorter: true,
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      sorter: true,
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
+      sorter: true,
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "createdAt",
+      render: (text, record) => (
+        <label> {moment(record.createdAt).format("DD-MM-YYYY HH:MM:SS")}</label>
+      ),
+      sorter: true,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: () => <button>delete</button>,
+    },
+  ];
+
   useEffect(() => {
     fetchDataUser();
-  }, [current, pageSize]);
+  }, [current, pageSize, filter, sortQuery]);
 
-  const onChange = (paginate) => {
+  const onChange = (paginate, filters, sort, extra) => {
     if (+paginate.current !== current) {
       setCurrent(paginate.current);
     }
@@ -76,34 +89,82 @@ const UserTable = () => {
       setPageSize(paginate.pageSize);
       setCurrent(1);
     }
+    if (sort && sort.field) {
+      const newSortQuery =
+        sort.order === "ascend" ? `sort=${sort.field}` : `sort=-${sort.field}`;
+      setSortQuery(newSortQuery, sort);
+    }
   };
 
   const fetchDataUser = async () => {
-    const res = await getUserWithPaginate(current, pageSize);
+    let query = `current=${current}&pageSize=${pageSize}`;
+    setIsLoading(true);
+    if (filter) {
+      query += `&${filter}`;
+    }
+    if (sortQuery) {
+      query += `&${sortQuery}`;
+    }
+    const res = await getUserWithPaginate(query);
     if (res && res.data) {
-      console.log("res", res.data);
-
+      setIsLoading(false);
       setListUser(res.data.result);
       setTotal(res.data.meta.total);
     }
   };
 
+  const refreshData = () => {
+    setSortQuery("");
+    setFilter("");
+  };
+
   return (
     <>
-      <Table
-        onChange={onChange}
-        dataSource={listUser}
-        title={() => <HeaderTable />}
-        rowKey={"_id"}
-        columns={columns}
-        pagination={{
-          current: current,
-          pageSize: pageSize,
-          showSizeChanger: true,
-          pageSizeOptions: ["4", "6", "8", "12"],
-          total: total,
-        }}
+      <div className="admin-input-search">
+        <InputSearch fetchDataUser={fetchDataUser} setFilter={setFilter} />
+      </div>
+      <div className="admin-table-user">
+        <Table
+          loading={isLoading}
+          onChange={onChange}
+          dataSource={listUser}
+          title={() => (
+            <HeaderTable
+              refreshData={refreshData}
+              setOpenModalCreate={setOpenModalCreate}
+              setOpenModalImport={setOpenModalImport}
+            />
+          )}
+          rowKey={"_id"}
+          columns={columns}
+          sticky={true}
+          pagination={{
+            current: current,
+            pageSize: pageSize,
+            showSizeChanger: true,
+            pageSizeOptions: ["4", "6", "8", "12"],
+            total: total,
+            showTotal: (total, range) => {
+              return (
+                <div>
+                  {range[0]}-{range[1]} of {total} items
+                </div>
+              );
+            },
+          }}
+        />
+      </div>
+      <DetailUser
+        open={showViewDetail}
+        setOpen={setShowViewDetail}
+        data={dataViewDetail}
       />
+      <ModalCreateUser
+        fetchDataUser={fetchDataUser}
+        setOpen={setOpenModalCreate}
+        open={openModalCreate}
+      />
+      <ModalImportUser setOpen={setOpenModalImport} open={openModalImport} />
     </>
   );
 };

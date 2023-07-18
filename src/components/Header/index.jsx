@@ -1,20 +1,23 @@
 /** @format */
 
-import { Badge, Dropdown, Input, Space, message } from "antd";
+import { Avatar, Badge, Dropdown, Input, Space, message } from "antd";
 import { FaReact } from "react-icons/fa";
 import { VscSearchFuzzy } from "react-icons/vsc";
 import { GiShoppingCart } from "react-icons/gi";
 import { DownOutlined } from "@ant-design/icons";
 import "./header.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/apiService";
 import { doLogout } from "../../redux/account/accountSlice";
 const Header = () => {
-  const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-  const userName = useSelector((state) => state.account.user.fullName);
+  const account = useSelector((state) => state.account);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const url = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
+    account.user.avatar
+  }`;
 
   const handleLogout = async () => {
     const res = await postLogout();
@@ -27,16 +30,23 @@ const Header = () => {
     console.log("res", res);
   };
 
-  const items = [
+  let items = [
     {
       label: <label>Quản lý tài khoản</label>,
-      key: "0",
+      key: "1",
     },
     {
       label: <label onClick={handleLogout}>Đăng xuất</label>,
-      key: "1",
+      key: "2",
     },
   ];
+
+  if (account.user.role === "ADMIN") {
+    items.unshift({
+      label: <Link to="/admin">Trang Quản Trị</Link>,
+      key: "0",
+    });
+  }
 
   return (
     <header className="header">
@@ -59,7 +69,7 @@ const Header = () => {
             <GiShoppingCart />
           </span>
         </Badge>
-        {isAuthenticated ? (
+        {account?.isAuthenticated ? (
           <>
             <Dropdown
               menu={{
@@ -69,7 +79,7 @@ const Header = () => {
             >
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  Welcome {userName}
+                  <Avatar src={url} /> {account?.user?.fullName}
                   <DownOutlined />
                 </Space>
               </a>
