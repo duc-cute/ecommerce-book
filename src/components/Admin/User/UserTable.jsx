@@ -21,7 +21,7 @@ const UserTable = () => {
   const [showViewDetail, setShowViewDetail] = useState(false);
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
-  const [openModalImport, setOpenModalImport] = useState(true);
+  const [openModalImport, setOpenModalImport] = useState(false);
 
   const [filter, setFilter] = useState("");
   const [sortQuery, setSortQuery] = useState("");
@@ -133,6 +133,7 @@ const UserTable = () => {
               refreshData={refreshData}
               setOpenModalCreate={setOpenModalCreate}
               setOpenModalImport={setOpenModalImport}
+              listUser={listUser}
             />
           )}
           rowKey={"_id"}
