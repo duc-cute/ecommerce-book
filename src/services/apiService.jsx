@@ -37,6 +37,18 @@ const postCreateBulkUser = (data) => {
   return axios.post("api/v1/user/bulk-create", data);
 };
 
+const deleteUser = (id) => {
+  return axios.delete(`api/v1/user/${id}`);
+};
+
+const updateUser = (_id, fullName, phone) => {
+  return axios.put("api/v1/user", {
+    _id,
+    fullName,
+    phone,
+  });
+};
+
 export {
   postRegister,
   postLogin,
@@ -45,4 +57,6 @@ export {
   getUserWithPaginate,
   postCreateUser,
   postCreateBulkUser,
+  deleteUser,
+  updateUser,
 };

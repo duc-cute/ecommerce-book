@@ -1,14 +1,21 @@
 /** @format */
 
-import { Table } from "antd";
+import { Button, Popconfirm, Table, notification } from "antd";
 import { useEffect, useState } from "react";
-import { getUserWithPaginate } from "../../../services/apiService";
+import { deleteUser, getUserWithPaginate } from "../../../services/apiService";
 import InputSearch from "./InputSearch";
 import HeaderTable from "./HeaderTable";
 import DetailUser from "./DetailUser";
 import moment from "moment";
 import ModalCreateUser from "../Modal/ModalCreateUser";
 import ModalImportUser from "../Modal/ModalImportUser";
+import * as XLSX from "xlsx";
+import {
+  DeleteTwoTone,
+  EditTwoTone,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
+import ModalUpdateUser from "../Modal/ModalUpdateUser";
 
 const UserTable = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +28,13 @@ const UserTable = () => {
   const [showViewDetail, setShowViewDetail] = useState(false);
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [openModalImport, setOpenModalImport] = useState(false);
 
   const [filter, setFilter] = useState("");
   const [sortQuery, setSortQuery] = useState("");
+
+  const [dataUpdate, setDataUpdate] = useState({});
 
   const columns = [
     {
@@ -73,7 +83,37 @@ const UserTable = () => {
     {
       title: "Action",
       key: "action",
-      render: () => <button>delete</button>,
+      render: (text, record) => {
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <Popconfirm
+              placement="topLeft"
+              title="Xóa người dùng"
+              icon={
+                <QuestionCircleOutlined
+                  style={{
+                    color: "red",
+                  }}
+                />
+              }
+              description="Bạn chắc chắn muốn xóa người dùng này ?"
+              onConfirm={() => handleDelete(record)}
+            >
+              <DeleteTwoTone
+                style={{ fontSize: "18px" }}
+                twoToneColor="#ff4d4f"
+              />
+            </Popconfirm>
+            <EditTwoTone
+              style={{ fontSize: "18px", cursor: "pointer" }}
+              onClick={() => {
+                setOpenModalUpdate(true);
+                setDataUpdate(record);
+              }}
+            />
+          </div>
+        );
+      },
     },
   ];
 
@@ -118,6 +158,32 @@ const UserTable = () => {
     setFilter("");
   };
 
+  const handleExportData = () => {
+    if (listUser.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listUser);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      XLSX.writeFile(workbook, "ExportUser.csv");
+    }
+  };
+
+  const handleDelete = async (record) => {
+    const res = await deleteUser(record._id);
+    console.log("res", res);
+    if (res && res.data) {
+      notification.success({
+        message: "Deleted User successfully",
+        description: `Deleted  user name : ${record.fullName} `,
+      });
+      await fetchDataUser();
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: `${res.message}`,
+      });
+    }
+  };
+
   return (
     <>
       <div className="admin-input-search">
@@ -133,7 +199,7 @@ const UserTable = () => {
               refreshData={refreshData}
               setOpenModalCreate={setOpenModalCreate}
               setOpenModalImport={setOpenModalImport}
-              listUser={listUser}
+              handleExportData={handleExportData}
             />
           )}
           rowKey={"_id"}
@@ -169,6 +235,13 @@ const UserTable = () => {
         setOpen={setOpenModalImport}
         open={openModalImport}
         fetchDataUser={fetchDataUser}
+      />
+      <ModalUpdateUser
+        setOpen={setOpenModalUpdate}
+        open={openModalUpdate}
+        fetchDataUser={fetchDataUser}
+        data={dataUpdate}
+        setData={setDataUpdate}
       />
     </>
   );

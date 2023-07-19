@@ -9,9 +9,9 @@ const instance = axios.create({
   baseURL: baseUrl,
 });
 
-instance.defaults.headers.common[
-  "Authorization"
-] = `Bearer ${localStorage.getItem("access_token")}`;
+instance.defaults.headers.common = {
+  Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+};
 
 const handleRefreshToken = async () => {
   const res = await instance.get("api/v1/auth/refresh");
@@ -70,8 +70,6 @@ instance.interceptors.response.use(
       window.location.href = "/login";
     }
 
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
     return error?.response?.data ?? Promise.reject(error);
   }
 );

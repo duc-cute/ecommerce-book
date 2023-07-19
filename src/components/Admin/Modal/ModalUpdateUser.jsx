@@ -1,33 +1,30 @@
 /** @format */
 
 import { Divider, Form, Input, Modal, message, notification } from "antd";
-import { postCreateUser } from "../../../services/apiService";
-import { useState } from "react";
+import { updateUser } from "../../../services/apiService";
+import { useEffect, useState } from "react";
 
-const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
+const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false);
 
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  useEffect(() => {
+    form.setFieldsValue(data);
+  }, [data]);
 
   const onFinish = async (values) => {
-    if (
-      values.fullName ||
-      validateEmail(values.email) ||
-      values.password ||
-      values.phone
-    ) {
+    if (values.fullName || values.phone) {
       setIsSubmit(true);
-      const res = await postCreateUser(values);
+      const res = await updateUser(values._id, values.fullName, values.phone);
+
+      console.log("res up", res);
       setIsSubmit(false);
       if (res && res.data) {
-        message.success("Thêm mới người dùng thành công");
+        notification.success({
+          message: "Updated successfully",
+          description: `Updated Success : ${values.fullName} `,
+        });
+        setData({});
         setOpen(false);
         form.resetFields();
         await fetchDataUser();
@@ -43,6 +40,7 @@ const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
   return (
     <>
       <Modal
+        forceRender
         title=<label>Thêm Mới Người Dùng</label>
         open={open}
         onOk={() => form.submit()}
@@ -52,15 +50,24 @@ const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
         <Divider />
         <Form
           form={form}
-          name="basic"
+          name="update"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 24 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           autoComplete="off"
-          className="ModalCreateUser-form"
+          className="ModalUpdateUser-form"
           size="large"
         >
+          <Form.Item
+            hidden
+            labelCol={{ span: 24 }}
+            label="Id"
+            name="_id"
+            rules={[{ required: true, message: "Please input your fullname!" }]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
             label="Tên hiển thị"
@@ -69,21 +76,14 @@ const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            labelCol={{ span: 24 }}
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
-          >
-            <Input />
-          </Form.Item>
+
           <Form.Item
             labelCol={{ span: 24 }}
             label="Email"
             name="email"
             rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input />
+            <Input disabled />
           </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
@@ -101,4 +101,4 @@ const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
   );
 };
 
-export default ModalCreateUser;
+export default ModalUpdateUser;

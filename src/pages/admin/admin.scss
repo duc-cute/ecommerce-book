@@ -1,7 +1,7 @@
 /** @format */
 .admin-input-search {
   background-color: #ebebeb;
-  padding: 16px 20px 28px 20px;
+  padding: 16px 20px 12px 20px;
   margin-bottom: 20px;
   border-radius: 8px;
   .group-form {
@@ -33,7 +33,7 @@
     color: #5f5f5f;
   }
   overflow-y: auto;
-  max-height: 420px;
+  max-height: 436px;
   &::-webkit-scrollbar {
     width: 10px;
   }
