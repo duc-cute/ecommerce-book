@@ -1,21 +1,39 @@
 /** @format */
 
-import { Button, Modal, Table } from "antd";
+import { Button, Modal, notification, Table } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import * as XLSX from "xlsx";
 import { useState } from "react";
+import { postCreateBulkUser } from "../../../services/apiService";
+import ExampleFile from "../../../assets/ExampleFile.xlsx?url";
 
-const ModalImportUser = ({ open, setOpen }) => {
+const ModalImportUser = ({ open, setOpen, fetchDataUser }) => {
   const [dataImport, setDataImport] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDisable, setIsDisable] = useState(true);
 
-  const handleOk = () => {
-    setOpen(false);
-    setDataImport([]);
+  const handleOk = async () => {
+    let data = dataImport.map((item) => {
+      item.password = "123456";
+      return item;
+    });
+    const res = await postCreateBulkUser(data);
+    if (res && res.data) {
+      notification.success({
+        message: "File uploaded successfully",
+        description: `Success : ${res.data.countSuccess} Error: ${res.data.countError}`,
+      });
+      await fetchDataUser();
+      setOpen(false);
+      setDataImport([]);
+    } else {
+      notification.error({
+        message: "Error uploading",
+        description: `${res.message}`,
+      });
+    }
   };
 
   const dummyRequest = ({ file, onSuccess }) => {
@@ -57,15 +75,14 @@ const ModalImportUser = ({ open, setOpen }) => {
       let readedData = XLSX.read(data, { type: "array" });
       const ws = readedData.Sheets["Sheet1"];
 
-      const dataParse = XLSX.utils.sheet_to_json(ws);
-      // const dataParse = XLSX.utils.sheet_to_json(ws, {
-      //   headers: ["fullName","email","phone"], Fomat data
-      //   range:1
-      // });
+      // const dataParse = XLSX.utils.sheet_to_json(ws);
+      const dataParse = XLSX.utils.sheet_to_json(ws, {
+        header: ["fullName", "email", "phone"],
+        range: 1,
+      });
       if (dataParse) {
         setDataImport(dataParse);
-        setIsDisable(false);
-        console.log("dataP", dataParse);
+        console.log("dtI", dataImport);
       }
     };
     reader.readAsArrayBuffer(f);
@@ -83,11 +100,11 @@ const ModalImportUser = ({ open, setOpen }) => {
       }}
       okText="Import Data"
       okButtonProps={{
-        disabled: isDisable,
+        disabled: dataImport.length < 1,
       }}
       style={{ top: 40 }}
     >
-      <Dragger {...props}>
+      <Dragger {...props} showUploadList={dataImport.length > 0}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -95,28 +112,31 @@ const ModalImportUser = ({ open, setOpen }) => {
           Click or drag file to this area to upload
         </p>
         <p className="ant-upload-hint">
-          Support for a single upload. Only accept .csv, .xls, .xlsx
+          Support for a single upload. Only accept .csv, .xls, .xlsx or &nbsp;
+          <a href={ExampleFile} download onClick={(e) => e.stopPropagation()}>
+            DownLoad simple file
+          </a>
         </p>
       </Dragger>
       <p style={{ margin: "48px 0 12px 6px" }}>Dữ liệu upload:</p>
       <Table
         sticky
-        rowKey={"Email"}
+        rowKey={"email"}
         dataSource={dataImport}
         style={{ maxHeight: "280px", overflow: "auto" }}
         loading={isLoading}
         columns={[
           {
             title: "Tên hiển thị",
-            dataIndex: "Tên hiển thị",
+            dataIndex: "fullName",
           },
           {
             title: "Email",
-            dataIndex: "Email",
+            dataIndex: "email",
           },
           {
             title: "Số điện thoại",
-            dataIndex: "Số điện thoại",
+            dataIndex: "phone",
           },
         ]}
       />

@@ -61,9 +61,6 @@ instance.interceptors.response.use(
       }
     }
 
-    console.log("url", error.config.url === "api/v1/auth/refresh");
-    console.log("status", +error.response.status === 400);
-    console.log(error.config.url);
     if (
       error.config &&
       error.response &&

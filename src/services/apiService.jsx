@@ -33,6 +33,10 @@ const postCreateUser = (values) => {
   });
 };
 
+const postCreateBulkUser = (data) => {
+  return axios.post("api/v1/user/bulk-create", data);
+};
+
 export {
   postRegister,
   postLogin,
@@ -40,4 +44,5 @@ export {
   postLogout,
   getUserWithPaginate,
   postCreateUser,
+  postCreateBulkUser,
 };

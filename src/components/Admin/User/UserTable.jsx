@@ -164,7 +164,11 @@ const UserTable = () => {
         setOpen={setOpenModalCreate}
         open={openModalCreate}
       />
-      <ModalImportUser setOpen={setOpenModalImport} open={openModalImport} />
+      <ModalImportUser
+        setOpen={setOpenModalImport}
+        open={openModalImport}
+        fetchDataUser={fetchDataUser}
+      />
     </>
   );
 };
