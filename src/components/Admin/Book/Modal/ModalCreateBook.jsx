@@ -1,30 +1,33 @@
 /** @format */
 
 import { Divider, Form, Input, Modal, message, notification } from "antd";
-import { updateUser } from "../../../services/apiService";
-import { useEffect, useState } from "react";
+import { postCreateUser } from "../../../../services/apiService";
+import { useState } from "react";
 
-const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
+const ModalCreateBook = ({ open, setOpen, fetchDataUser }) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false);
 
-  useEffect(() => {
-    form.setFieldsValue(data);
-  }, [data]);
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   const onFinish = async (values) => {
-    if (values.fullName || values.phone) {
+    if (
+      values.fullName ||
+      validateEmail(values.email) ||
+      values.password ||
+      values.phone
+    ) {
       setIsSubmit(true);
-      const res = await updateUser(values._id, values.fullName, values.phone);
-
-      console.log("res up", res);
+      const res = await postCreateUser(values);
       setIsSubmit(false);
       if (res && res.data) {
-        notification.success({
-          message: "Updated successfully",
-          description: `Updated Success : ${values.fullName} `,
-        });
-        setData({});
+        message.success("Thêm mới người dùng thành công");
         setOpen(false);
         form.resetFields();
         await fetchDataUser();
@@ -40,7 +43,6 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
   return (
     <>
       <Modal
-        forceRender
         title=<label>Thêm Mới Người Dùng</label>
         open={open}
         onOk={() => form.submit()}
@@ -50,24 +52,15 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
         <Divider />
         <Form
           form={form}
-          name="update"
+          name="basic"
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 24 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           autoComplete="off"
-          className="ModalUpdateUser-form"
+          className="ModalCreateBook-form"
           size="large"
         >
-          <Form.Item
-            hidden
-            labelCol={{ span: 24 }}
-            label="Id"
-            name="_id"
-            rules={[{ required: true, message: "Please input your fullname!" }]}
-          >
-            <Input />
-          </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
             label="Tên hiển thị"
@@ -76,14 +69,21 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
           >
             <Input />
           </Form.Item>
-
+          <Form.Item
+            labelCol={{ span: 24 }}
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: "Please input your password!" }]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
             label="Email"
             name="email"
             rules={[{ required: true, message: "Please input your email!" }]}
           >
-            <Input disabled />
+            <Input />
           </Form.Item>
           <Form.Item
             labelCol={{ span: 24 }}
@@ -101,4 +101,4 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
   );
 };
 
-export default ModalUpdateUser;
+export default ModalCreateBook;

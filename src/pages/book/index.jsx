@@ -1,7 +1,13 @@
 /** @format */
 
+import BookTable from "../../components/Admin/Book/BookTable";
+
 const BookPage = () => {
-  return <>book</>;
+  return (
+    <>
+      <BookTable />
+    </>
+  );
 };
 
 export default BookPage;

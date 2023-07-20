@@ -7,8 +7,8 @@ import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
 import * as XLSX from "xlsx";
 import { useState } from "react";
-import { postCreateBulkUser } from "../../../services/apiService";
-import ExampleFile from "../../../assets/ExampleFile.xlsx?url";
+import ExampleFile from "../../../../assets/ExampleFile.xlsx?url";
+import { postCreateBulkUser } from "../../../../services/apiService";
 
 const ModalImportUser = ({ open, setOpen, fetchDataUser }) => {
   const [dataImport, setDataImport] = useState([]);

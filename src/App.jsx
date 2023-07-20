@@ -17,6 +17,7 @@ import AdminPage from "./pages/admin/admin";
 import Loading from "./components/Loading/Loading";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import LayoutAdmin from "./components/Admin/LayoutAdmin";
+import UserTable from "./components/Admin/User/UserTable";
 
 const Layout = () => {
   return (
@@ -76,7 +77,7 @@ const router = createBrowserRouter([
       },
       {
         path: "user",
-        element: <ContactPage />,
+        element: <UserTable />,
       },
       {
         path: "book",

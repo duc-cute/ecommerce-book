@@ -21,8 +21,7 @@ import {
   message,
   Avatar,
 } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
-import Link from "antd/es/typography/Link";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
 import { doLogout } from "../../redux/account/accountSlice";
@@ -36,12 +35,12 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem(<label>DashBoard</label>, "1", <LuLayoutDashboard />),
+  getItem(<Link to="/admin">DashBoard</Link>, "1", <LuLayoutDashboard />),
   getItem(<label>Manage User</label>, "sub1", <FaRegUserCircle />, [
-    getItem(<label>CRUD</label>, "3"),
+    getItem(<Link to="/admin/user">CRUD</Link>, "3"),
     getItem(<label>Alex</label>, "5"),
   ]),
-  getItem(<label>Manage Book</label>, "sub2", <FaBook />),
+  getItem(<Link to="/admin/book">Manage Book</Link>, "sub2", <FaBook />),
   getItem(<label>Manage Orders</label>, "9", <RiMoneyPoundCircleLine />),
 ];
 

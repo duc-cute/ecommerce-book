@@ -23,6 +23,8 @@ const postLogout = () => {
   return axios.post("api/v1/auth/logout");
 };
 
+//Users
+
 const getUserWithPaginate = (query) => {
   return axios.get(`api/v1/user?${query}`);
 };
@@ -49,6 +51,45 @@ const updateUser = (_id, fullName, phone) => {
   });
 };
 
+// Books
+const getBookWithPaginate = (query) => {
+  return axios.get(`api/v1/book?${query}`);
+};
+
+// api/v1/book?current=1&pageSize=10
+
+const postCreateBook = (values) => {
+  return axios.post("api/v1/book", {
+    ...values,
+  });
+};
+
+const deleteBook = (id) => {
+  return axios.delete(`api/v1/user/${id}`);
+};
+
+const updateBook = (
+  thumbnail,
+  slider,
+  mainText,
+  author,
+  price,
+  sold,
+  quantity,
+  category
+) => {
+  return axios.put("api/v1/book", {
+    thumbnail,
+    slider,
+    mainText,
+    author,
+    price,
+    sold,
+    quantity,
+    category,
+  });
+};
+
 export {
   postRegister,
   postLogin,
@@ -59,4 +100,8 @@ export {
   postCreateBulkUser,
   deleteUser,
   updateUser,
+  getBookWithPaginate,
+  postCreateBook,
+  deleteBook,
+  updateBook,
 };

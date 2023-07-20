@@ -2,10 +2,9 @@
 
 import { Popconfirm, Table, notification } from "antd";
 import { useEffect, useState } from "react";
-import { deleteUser, getUserWithPaginate } from "../../../services/apiService";
+import { getBookWithPaginate } from "../../../services/apiService";
 import InputSearch from "./InputSearch";
 import HeaderTable from "./HeaderTable";
-import DetailUser from "./DetailUser";
 import moment from "moment";
 import * as XLSX from "xlsx";
 import {
@@ -13,15 +12,15 @@ import {
   EditTwoTone,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import ModalUpdateUser from "./Modal/ModalUpdateUser";
-import ModalCreateUser from "./Modal/ModalCreateUser";
-import ModalImportUser from "./Modal/ModalImportUser";
 
-const UserTable = () => {
+import ModalCreateBook from "./Modal/ModalCreateBook";
+import ModalUpdateBook from "./Modal/ModalUpdateBook";
+
+const BookTable = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
-  const [listUser, setListUser] = useState([]);
+  const [listBook, setListBook] = useState([]);
   const [total, setTotal] = useState(0);
 
   const [dataViewDetail, setDataViewDetail] = useState({});
@@ -29,10 +28,9 @@ const UserTable = () => {
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
-  const [openModalImport, setOpenModalImport] = useState(false);
 
   const [filter, setFilter] = useState("");
-  const [sortQuery, setSortQuery] = useState("");
+  const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
 
   const [dataUpdate, setDataUpdate] = useState({});
 
@@ -55,21 +53,27 @@ const UserTable = () => {
       },
     },
     {
-      title: "Tên hiển thị",
-      dataIndex: "fullName",
-      key: "fullName",
+      title: "Tên sách",
+      dataIndex: "mainText",
+      key: "mainText",
       sorter: true,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Thể loại",
+      dataIndex: "category",
+      key: "category",
       sorter: true,
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Tác giả",
+      dataIndex: "author",
+      key: "author",
+      sorter: true,
+    },
+    {
+      title: "Giá tiền",
+      dataIndex: "price",
+      key: "price",
       sorter: true,
     },
     {
@@ -118,7 +122,7 @@ const UserTable = () => {
   ];
 
   useEffect(() => {
-    fetchDataUser();
+    fetchDataBook();
   }, [current, pageSize, filter, sortQuery]);
 
   const onChange = (paginate, filters, sort, extra) => {
@@ -136,7 +140,7 @@ const UserTable = () => {
     }
   };
 
-  const fetchDataUser = async () => {
+  const fetchDataBook = async () => {
     let query = `current=${current}&pageSize=${pageSize}`;
     setIsLoading(true);
     if (filter) {
@@ -145,12 +149,13 @@ const UserTable = () => {
     if (sortQuery) {
       query += `&${sortQuery}`;
     }
-    const res = await getUserWithPaginate(query);
+    const res = await getBookWithPaginate(query);
+    setIsLoading(false);
     if (res && res.data) {
-      setIsLoading(false);
-      setListUser(res.data.result);
+      setListBook(res.data.result);
       setTotal(res.data.meta.total);
     }
+    console.log("res book", res);
   };
 
   const refreshData = () => {
@@ -159,8 +164,8 @@ const UserTable = () => {
   };
 
   const handleExportData = () => {
-    if (listUser.length > 0) {
-      const worksheet = XLSX.utils.json_to_sheet(listUser);
+    if (listBook.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listBook);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
       XLSX.writeFile(workbook, "ExportUser.csv");
@@ -168,14 +173,14 @@ const UserTable = () => {
   };
 
   const handleDelete = async (record) => {
-    const res = await deleteUser(record._id);
+    // const res = await deleteUser(record._id)
     console.log("res", res);
     if (res && res.data) {
       notification.success({
         message: "Deleted User successfully",
         description: `Deleted  user name : ${record.fullName} `,
       });
-      await fetchDataUser();
+      await fetchDataBook();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
@@ -187,18 +192,17 @@ const UserTable = () => {
   return (
     <>
       <div className="admin-input-search">
-        <InputSearch fetchDataUser={fetchDataUser} setFilter={setFilter} />
+        <InputSearch fetchDataBook={fetchDataBook} setFilter={setFilter} />
       </div>
       <div className="admin-table-user">
         <Table
           loading={isLoading}
           onChange={onChange}
-          dataSource={listUser}
+          dataSource={listBook}
           title={() => (
             <HeaderTable
               refreshData={refreshData}
               setOpenModalCreate={setOpenModalCreate}
-              setOpenModalImport={setOpenModalImport}
               handleExportData={handleExportData}
             />
           )}
@@ -221,25 +225,21 @@ const UserTable = () => {
           }}
         />
       </div>
-      <DetailUser
+      {/* <DetailUser
         open={showViewDetail}
         setOpen={setShowViewDetail}
         data={dataViewDetail}
-      />
-      <ModalCreateUser
-        fetchDataUser={fetchDataUser}
+      /> */}
+      <ModalCreateBook
+        fetchDataBook={fetchDataBook}
         setOpen={setOpenModalCreate}
         open={openModalCreate}
       />
-      <ModalImportUser
-        setOpen={setOpenModalImport}
-        open={openModalImport}
-        fetchDataUser={fetchDataUser}
-      />
-      <ModalUpdateUser
+
+      <ModalUpdateBook
         setOpen={setOpenModalUpdate}
         open={openModalUpdate}
-        fetchDataUser={fetchDataUser}
+        fetchDataBook={fetchDataBook}
         data={dataUpdate}
         setData={setDataUpdate}
       />
@@ -247,4 +247,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default BookTable;
