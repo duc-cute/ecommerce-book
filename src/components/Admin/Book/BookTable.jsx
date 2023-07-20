@@ -15,6 +15,7 @@ import {
 
 import ModalCreateBook from "./Modal/ModalCreateBook";
 import ModalUpdateBook from "./Modal/ModalUpdateBook";
+import DetailBook from "./DetailBook";
 
 const BookTable = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -70,10 +71,18 @@ const BookTable = () => {
       key: "author",
       sorter: true,
     },
+
     {
       title: "Giá tiền",
       dataIndex: "price",
-      key: "price",
+      render: (text, record) => (
+        <label>
+          {new Intl.NumberFormat("vi-VI", {
+            style: "currency",
+            currency: "vnd",
+          }).format(record.price)}
+        </label>
+      ),
       sorter: true,
     },
     {
@@ -136,7 +145,7 @@ const BookTable = () => {
     if (sort && sort.field) {
       const newSortQuery =
         sort.order === "ascend" ? `sort=${sort.field}` : `sort=-${sort.field}`;
-      setSortQuery(newSortQuery, sort);
+      setSortQuery(newSortQuery);
     }
   };
 
@@ -225,11 +234,11 @@ const BookTable = () => {
           }}
         />
       </div>
-      {/* <DetailUser
+      <DetailBook
         open={showViewDetail}
         setOpen={setShowViewDetail}
         data={dataViewDetail}
-      /> */}
+      />
       <ModalCreateBook
         fetchDataBook={fetchDataBook}
         setOpen={setOpenModalCreate}
