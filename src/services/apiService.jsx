@@ -56,38 +56,8 @@ const getBookWithPaginate = (query) => {
   return axios.get(`api/v1/book?${query}`);
 };
 
-// api/v1/book?current=1&pageSize=10
-
-const postCreateBook = (values) => {
-  return axios.post("api/v1/book", {
-    ...values,
-  });
-};
-
 const deleteBook = (id) => {
   return axios.delete(`api/v1/user/${id}`);
-};
-
-const updateBook = (
-  thumbnail,
-  slider,
-  mainText,
-  author,
-  price,
-  sold,
-  quantity,
-  category
-) => {
-  return axios.put("api/v1/book", {
-    thumbnail,
-    slider,
-    mainText,
-    author,
-    price,
-    sold,
-    quantity,
-    category,
-  });
 };
 
 const getBookCategory = () => {
@@ -114,6 +84,12 @@ const postCreateNewBook = (values) => {
   });
 };
 
+const updateBook = (values, id) => {
+  return axios.put(`api/v1/book/${id}`, {
+    ...values,
+  });
+};
+
 export {
   postRegister,
   postLogin,
@@ -125,10 +101,9 @@ export {
   deleteUser,
   updateUser,
   getBookWithPaginate,
-  postCreateBook,
   deleteBook,
-  updateBook,
   getBookCategory,
   uploadImageBook,
   postCreateNewBook,
+  updateBook,
 };

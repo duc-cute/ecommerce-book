@@ -16,12 +16,14 @@ import {
 import {
   getBookCategory,
   postCreateNewBook,
+  updateBook,
   uploadImageBook,
 } from "../../../../services/apiService";
 import { useEffect, useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { v4 as uuidv4 } from "uuid";
 
-const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
+const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data, setData }) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false);
   const [dataSelect, setDataSelect] = useState([]);
@@ -35,14 +37,69 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
 
   const [dataThumbNail, setDataThumbNail] = useState([]);
   const [dataSlider, setDataSlider] = useState([]);
+  const [initForm, setInitForm] = useState({});
 
   useEffect(() => {
-    if (data) {
+    const fetchDataCategory = async () => {
+      const res = await getBookCategory();
+      if (res && res.data && res.data.length > 0) {
+        const category = res.data.map((item) => {
+          return {
+            label: item,
+            value: item,
+          };
+        });
+        setDataSelect(category);
+      }
+    };
+    fetchDataCategory();
+  }, []);
+
+  useEffect(() => {
+    if (data?._id) {
+      console.log("dât", data);
+      const imgThumbnail = [
+        {
+          uid: uuidv4(),
+          name: data.thumbnail,
+          status: "done",
+
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${
+            data.thumbnail
+          }`,
+        },
+      ];
+      const arrSlider = data.slider.map((item) => {
+        return {
+          uid: uuidv4(),
+          name: item,
+          status: "done",
+
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+        };
+      });
+
+      const init = {
+        author: data.author,
+        category: data.category,
+        mainText: data.mainText,
+        sold: data.sold,
+        price: data.price,
+        quantity: data.quantity,
+        _id: data._id,
+        slider: { fileList: arrSlider },
+        thumbnail: { fileList: imgThumbnail },
+      };
+      setInitForm(init);
+      setDataThumbNail(imgThumbnail);
+      setDataSlider(arrSlider);
       form.setFieldsValue(data);
     }
-  }, [data]);
 
-  console.log("data", data);
+    return () => {
+      form.resetFields();
+    };
+  }, [data]);
 
   const handleUploadFileThumbNail = async ({ file, onSuccess, onError }) => {
     const res = await uploadImageBook(file);
@@ -82,10 +139,18 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
   };
 
   const handlePreview = async (file) => {
+    if (file.url && !file.originFileObj) {
+      setPreviewImage(file.url);
+      setPreviewOpen(true);
+      setPreviewTitle(file.name);
+      return;
+    }
     getBase64(file.originFileObj, (url) => {
       setPreviewImage(url);
       setPreviewOpen(true);
-      setPreviewTitle(file.name);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
     });
   };
 
@@ -109,25 +174,26 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
     price,
     quantity,
     sold,
+    _id,
   }) => {
-    if (dataThumbNail.length < 0) {
+    if (dataThumbNail.length === 0) {
       notification.error({
         message: "Bạn chưa chọn ThumbNail",
         description: res.message,
       });
       return;
     }
-    if (dataSlider.length < 0) {
+    if (dataSlider.length === 0) {
       notification.error({
         message: "Bạn chưa chọn Slider",
         description: res.message,
       });
       return;
     }
-    setIsSubmit(true);
+    console.log("dttn", dataThumbNail);
     let thumbnail = dataThumbNail[0].name;
     let slider = dataSlider.map((item) => item.name);
-    console.log("slid", slider);
+
     const values = {
       author,
       category,
@@ -138,14 +204,16 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
       thumbnail,
       slider,
     };
-    const res = await postCreateNewBook(values);
-    console.log("resb", res.data);
 
-    setIsSubmit(false);
+    setIsSubmit(true);
+    const res = await updateBook(values, _id);
+
     if (res && res.data) {
       message.success("Thêm mới sách thành công");
       setOpen(false);
       form.resetFields();
+      setDataSlider([]);
+      setDataThumbNail([]);
       await fetchDataBook();
     } else {
       notification.error({
@@ -153,6 +221,7 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
         description: res.message,
       });
     }
+    setIsSubmit(false);
   };
 
   const beforeUpload = (file) => {
@@ -184,11 +253,13 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
         title=<label>Update Book</label>
         open={open}
         onOk={() => form.submit()}
-        okText="Tạo mới"
+        okText="Cập nhật"
         cancelText="Hủy"
+        forceRender
         onCancel={() => {
-          form.resetFields();
           setOpen(false);
+          setInitForm(null);
+          setData(null);
         }}
         confirmLoading={isSubmit}
         width={"60vw"}
@@ -313,10 +384,11 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Ảnh Thumbnail"
-                // name="thumbnail"
-                valuePropName="fileList"
+                name="thumbnail"
+                // valuePropName="fileList"
               >
                 <Upload
+                  name="thumbnail"
                   maxCount={1}
                   multiple={false}
                   beforeUpload={beforeUpload}
@@ -324,6 +396,7 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
                   onChange={handleChange}
                   customRequest={handleUploadFileThumbNail}
                   onPreview={handlePreview}
+                  defaultFileList={initForm?.thumbnail?.fileList ?? []}
                   onRemove={(file) => handleRomoveFile(file, "thumbnail")}
                 >
                   <div>
@@ -337,10 +410,10 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
               <Form.Item
                 labelCol={{ span: 24 }}
                 label="Ảnh Slider"
-                // name="slider"
-                valuePropName="fileList"
+                name="slider"
               >
                 <Upload
+                  name="slider"
                   beforeUpload={beforeUpload}
                   multiple
                   listType="picture-card"
@@ -348,6 +421,7 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data }) => {
                   customRequest={handleUploadFileSlider}
                   onPreview={handlePreview}
                   onRemove={(file) => handleRomoveFile(file, "slider")}
+                  defaultFileList={initForm?.slider?.fileList ?? []}
                 >
                   <div>
                     {isLoadingSlider ? <LoadingOutlined /> : <PlusOutlined />}

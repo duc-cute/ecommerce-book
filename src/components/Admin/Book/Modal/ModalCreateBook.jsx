@@ -119,14 +119,14 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
     quantity,
     sold,
   }) => {
-    if (dataThumbNail.length < 0) {
+    if (dataThumbNail.length === 0) {
       notification.error({
         message: "Bạn chưa chọn ThumbNail",
         description: res.message,
       });
       return;
     }
-    if (dataSlider.length < 0) {
+    if (dataSlider.length === 0) {
       notification.error({
         message: "Bạn chưa chọn Slider",
         description: res.message,
