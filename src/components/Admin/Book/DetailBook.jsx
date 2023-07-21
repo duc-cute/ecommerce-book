@@ -1,7 +1,7 @@
 /** @format */
 
 import { CloseOutlined } from "@ant-design/icons";
-import { Drawer, Descriptions, Badge, Upload, Modal } from "antd";
+import { Drawer, Descriptions, Badge, Upload, Modal, Divider } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -52,7 +52,6 @@ const DetailBook = ({ open, setOpen, data }) => {
   };
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-    console.log("fileList", fileList);
   };
 
   const onClose = () => {
@@ -88,6 +87,7 @@ const DetailBook = ({ open, setOpen, data }) => {
           {moment(data?.updatedAt).format("DD-MM-YYYY HH:MM:SS")}
         </Descriptions.Item>
       </Descriptions>
+      <Divider orientation="left">Ảnh Book</Divider>
       <Upload
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"

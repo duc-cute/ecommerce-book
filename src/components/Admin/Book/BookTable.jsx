@@ -164,7 +164,6 @@ const BookTable = () => {
       setListBook(res.data.result);
       setTotal(res.data.meta.total);
     }
-    console.log("res book", res);
   };
 
   const refreshData = () => {
@@ -183,7 +182,6 @@ const BookTable = () => {
 
   const handleDelete = async (record) => {
     // const res = await deleteUser(record._id)
-    console.log("res", res);
     if (res && res.data) {
       notification.success({
         message: "Deleted User successfully",

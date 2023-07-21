@@ -90,6 +90,30 @@ const updateBook = (
   });
 };
 
+const getBookCategory = () => {
+  return axios.get("api/v1/database/category");
+};
+
+const uploadImageBook = (fileImg) => {
+  const formData = new FormData();
+  formData.append("fileImg", fileImg);
+  return axios({
+    method: "post",
+    url: "api/v1/file/upload",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "upload-type": "book",
+    },
+  });
+};
+
+const postCreateNewBook = (values) => {
+  return axios.post("api/v1/book", {
+    ...values,
+  });
+};
+
 export {
   postRegister,
   postLogin,
@@ -104,4 +128,7 @@ export {
   postCreateBook,
   deleteBook,
   updateBook,
+  getBookCategory,
+  uploadImageBook,
+  postCreateNewBook,
 };
