@@ -2,7 +2,7 @@
 
 import { Popconfirm, Table, notification } from "antd";
 import { useEffect, useState } from "react";
-import { getBookWithPaginate } from "../../../services/apiService";
+import { deleteBook, getBookWithPaginate } from "../../../services/apiService";
 import InputSearch from "./InputSearch";
 import HeaderTable from "./HeaderTable";
 import moment from "moment";
@@ -101,7 +101,7 @@ const BookTable = () => {
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Popconfirm
               placement="topLeft"
-              title="Xóa người dùng"
+              title="Xóa sách "
               icon={
                 <QuestionCircleOutlined
                   style={{
@@ -109,7 +109,7 @@ const BookTable = () => {
                   }}
                 />
               }
-              description="Bạn chắc chắn muốn xóa người dùng này ?"
+              description="Bạn chắc chắn muốn xóa sách  này ?"
               onConfirm={() => handleDelete(record)}
             >
               <DeleteTwoTone
@@ -181,11 +181,11 @@ const BookTable = () => {
   };
 
   const handleDelete = async (record) => {
-    // const res = await deleteUser(record._id)
+    const res = await deleteBook(record._id);
     if (res && res.data) {
       notification.success({
         message: "Deleted User successfully",
-        description: `Deleted  user name : ${record.fullName} `,
+        description: `Deleted  book name : ${record.mainText} `,
       });
       await fetchDataBook();
     } else {

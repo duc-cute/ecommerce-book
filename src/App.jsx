@@ -18,13 +18,13 @@ import Loading from "./components/Loading/Loading";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import LayoutAdmin from "./components/Admin/LayoutAdmin";
 import UserTable from "./components/Admin/User/UserTable";
+import "./styles/App.scss";
 
 const Layout = () => {
   return (
     <div className="layout-app">
       <Header />
       <Outlet />
-      <Footer />
     </div>
   );
 };

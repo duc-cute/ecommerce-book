@@ -1,0 +1,107 @@
+/** @format */
+
+.homepage-container {
+  font-size: 16px;
+  margin-top: 24px;
+  padding: 0 20px;
+
+  label {
+    font-size: 16px !important;
+  }
+  .homepage-sidebar {
+    background-color: #fff;
+    padding: 24px 24px 12px 36px;
+    border-radius: 8px;
+    max-height: 100vh;
+    position: sticky;
+    overflow-y: hidden;
+    top: 16px;
+    .filter-sidebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      line-height: 1.5;
+
+      .icon-filter {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        font-size: 18px;
+        span {
+          display: flex;
+        }
+      }
+    }
+  }
+  .price-range {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-apply {
+    margin-top: 24px;
+  }
+
+  .ant-divider {
+    margin: 12px 0;
+  }
+
+  .rate-item {
+    .rate-text {
+      margin-left: 6px;
+      color: #242424;
+      font-weight: 400;
+    }
+  }
+
+  .homepage-content {
+    margin-bottom: 80px;
+    padding: 18px 24px;
+    position: relative;
+    background-color: #fff;
+    border-radius: 8px;
+
+    .customize-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 10px;
+      .column {
+        width: calc(20% - 16px);
+        .wrapper {
+          padding: 8px;
+          cursor: pointer;
+          box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          .thumbnail {
+            img {
+              width: 100%;
+            }
+          }
+          .content {
+            padding: 8px 8px 0 8px;
+            .text {
+              text-align: left;
+              margin-bottom: 4px;
+            }
+            .price {
+              color: rgb(255, 66, 78);
+              font-size: 16px;
+            }
+
+            .rating {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              margin-top: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

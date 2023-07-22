@@ -57,7 +57,7 @@ const getBookWithPaginate = (query) => {
 };
 
 const deleteBook = (id) => {
-  return axios.delete(`api/v1/user/${id}`);
+  return axios.delete(`api/v1/book/${id}`);
 };
 
 const getBookCategory = () => {

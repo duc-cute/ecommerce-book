@@ -4,10 +4,11 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  margin: 18px auto;
-  width: 1280px;
-  padding-left: 24px;
-  padding-right: 24px;
+  margin: 0 auto;
+  width: 100%;
+
+  padding: 12px 36px;
+  background-color: #fff;
 
   .header-logo {
     // flex: 2;
