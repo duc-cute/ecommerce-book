@@ -1,12 +1,11 @@
 /** @format */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
 import ContactPage from "./pages/contact";
 import BookPage from "./pages/book";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Home from "./components/Home";
 import RegisterPage from "./pages/register";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +18,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import LayoutAdmin from "./components/Admin/LayoutAdmin";
 import UserTable from "./components/Admin/User/UserTable";
 import "./styles/App.scss";
+import BookTable from "./components/Admin/Book/BookTable";
 
 const Layout = () => {
   return (
@@ -28,20 +28,6 @@ const Layout = () => {
     </div>
   );
 };
-
-// const LayoutAdmin = () => {
-//   const isAdminRoute = window.location.pathname.startsWith("/admin");
-//   const user = useSelector((state) => state.account.user);
-//   const userRole = user.role;
-
-//   return (
-//     <div className="layout-app">
-//       {isAdminRoute && userRole === "ADMIN" && <Header />}
-//       <Outlet />
-//       {isAdminRoute && userRole === "ADMIN" && <Footer />}
-//     </div>
-//   );
-// };
 
 const router = createBrowserRouter([
   {
@@ -56,7 +42,7 @@ const router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        path: "book",
+        path: "book/:slug",
         element: <BookPage />,
       },
     ],
@@ -81,7 +67,7 @@ const router = createBrowserRouter([
       },
       {
         path: "book",
-        element: <BookPage />,
+        element: <BookTable />,
       },
     ],
   },

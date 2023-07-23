@@ -21,8 +21,12 @@ import {
   getBookCategory,
   getBookWithPaginate,
 } from "../../services/apiService";
+import { useNavigate } from "react-router-dom";
+import slug from "slug";
 const Home = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+
   const [optionCategory, setOptionCategory] = useState([]);
   const [listBook, setListBook] = useState([]);
   const [filter, setFilter] = useState("");
@@ -37,7 +41,6 @@ const Home = () => {
   useEffect(() => {
     const fetchCategory = async () => {
       const res = await getBookCategory();
-      console.log("r", res.data);
       if (res && res.data) {
         const newArr = res.data.map((item) => {
           return { value: item, label: item };
@@ -58,14 +61,7 @@ const Home = () => {
     if (sortQuery) {
       query += `&${sortQuery}`;
     }
-    // if (
-    //   checkedList &&
-    //   checkedList.category &&
-    //   checkedList.category.length > 0
-    // ) {
-    //   let Categoryquery = `category=${checkedList.category.join(",")}`;
-    //   query += `&${Categoryquery}`;
-    // }
+
     const res = await getBookWithPaginate(query);
     setIsLoading(false);
 
@@ -96,7 +92,6 @@ const Home = () => {
         priceQuery += `&category=${values.category.join(",")}`;
       }
       setFilter(priceQuery);
-      console.log("filter", filter);
     }
   };
 
@@ -132,6 +127,11 @@ const Home = () => {
       setFilter(categoryQuery);
     }
   };
+
+  const handleRedirectBook = (book) => {
+    navigate(`/book/${slug(book.mainText)}?id=${book._id}`);
+  };
+
   return (
     <div className="homepage-container">
       <Row gutter={40}>
@@ -252,7 +252,11 @@ const Home = () => {
                 {listBook &&
                   listBook.length > 0 &&
                   listBook.map((book) => (
-                    <div className="column" key={book._id}>
+                    <div
+                      className="column"
+                      key={book._id}
+                      onClick={() => handleRedirectBook(book)}
+                    >
                       <div className="wrapper">
                         <div className="thumbnail">
                           <img src={`${URL_BACKEND}${book.thumbnail}`} />
