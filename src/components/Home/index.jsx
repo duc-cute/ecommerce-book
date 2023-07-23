@@ -10,142 +10,232 @@ import {
   Pagination,
   Rate,
   Row,
+  Spin,
   Tabs,
 } from "antd";
 import "./home.scss";
 import { AiFillFilter, AiOutlineReload } from "react-icons/ai";
 import Footer from "../Footer";
+import { useEffect, useState } from "react";
+import {
+  getBookCategory,
+  getBookWithPaginate,
+} from "../../services/apiService";
 const Home = () => {
+  const [form] = Form.useForm();
+  const [optionCategory, setOptionCategory] = useState([]);
+  const [listBook, setListBook] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [sortQuery, setSortQuery] = useState("sort=-sold");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [total, setTotal] = useState(0);
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const URL_BACKEND = "http://localhost:8080//images/book/";
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const res = await getBookCategory();
+      console.log("r", res.data);
+      if (res && res.data) {
+        const newArr = res.data.map((item) => {
+          return { value: item, label: item };
+        });
+        setOptionCategory(newArr);
+      }
+    };
+
+    fetchCategory();
+  }, []);
+
+  const fetchDataBook = async () => {
+    setIsLoading(true);
+    let query = `current=${current}&pageSize=${pageSize}`;
+    if (filter) {
+      query += `&${filter}`;
+    }
+    if (sortQuery) {
+      query += `&${sortQuery}`;
+    }
+    // if (
+    //   checkedList &&
+    //   checkedList.category &&
+    //   checkedList.category.length > 0
+    // ) {
+    //   let Categoryquery = `category=${checkedList.category.join(",")}`;
+    //   query += `&${Categoryquery}`;
+    // }
+    const res = await getBookWithPaginate(query);
+    setIsLoading(false);
+
+    if (res && res.data) {
+      setListBook(res.data.result);
+      setTotal(res.data.meta.total);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataBook();
+  }, [current, pageSize, sortQuery, filter]);
+
+  const onChangePaginate = (curr, pageS) => {
+    if (current !== curr) {
+      setCurrent(curr);
+    }
+    if (pageSize !== pageS) {
+      setPageSize(pageS);
+      setCurrent(1);
+    }
+  };
+
   const onFinish = (values) => {
-    // console.log("Success:", values);
+    if (values?.range?.from >= 0 && values?.range?.to > 0) {
+      let priceQuery = `price>=${values?.range?.from}&price<=${values?.range?.to}`;
+      if (values?.category?.length > 0) {
+        priceQuery += `&category=${values.category.join(",")}`;
+      }
+      setFilter(priceQuery);
+      console.log("filter", filter);
+    }
   };
 
   const onChangeTabs = (key) => {
-    console.log(key);
+    setSortQuery(key);
   };
   const items = [
     {
-      key: "1",
+      key: "sort=-sold",
       label: `Phổ biến`,
       children: <></>,
     },
     {
-      key: "2",
+      key: "sort=-updatedAt",
       label: `Hàng mới`,
       children: <></>,
     },
     {
-      key: "3",
+      key: "sort=price",
       label: `Giá thấp đến cao`,
       children: <></>,
     },
     {
-      key: "4",
+      key: "sort=-price",
       label: `Giá cao đến thấp`,
       children: <></>,
     },
   ];
 
-  const onValuesChange = (changeValues, values) => {};
+  const onValuesChange = (changeValues, values) => {
+    if (changeValues.category) {
+      let categoryQuery = `category=${values.category.join(",")}`;
+      setFilter(categoryQuery);
+    }
+  };
   return (
     <div className="homepage-container">
       <Row gutter={40}>
         <Col xs={0} sm={0} md={4} className="homepage-sidebar">
-          <div className="filter-sidebar">
-            <span className="icon-filter">
-              <AiFillFilter style={{ display: "flex", color: "aqua" }} /> Bộ lọc
-              tìm kiếm
-            </span>
-            <AiOutlineReload className="icon-filter" />
-          </div>
-          <Divider />
-          <Form
-            onFinish={onFinish}
-            onValuesChange={(changeValues, values) =>
-              onValuesChange(changeValues, values)
-            }
-          >
-            <Form.Item
-              name="category"
-              label="Danh mục sản phẩm"
-              labelCol={{ span: "24" }}
+          <div className="sidebar-wrapper">
+            <div className="filter-sidebar">
+              <span className="icon-filter">
+                <AiFillFilter style={{ display: "flex", color: "aqua" }} /> Bộ
+                lọc tìm kiếm
+              </span>
+              <AiOutlineReload
+                className="icon-filter"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  form.resetFields();
+                  setFilter("");
+                }}
+              />
+            </div>
+            <Divider />
+            <Form
+              form={form}
+              onFinish={onFinish}
+              onValuesChange={(changeValues, values) =>
+                onValuesChange(changeValues, values)
+              }
             >
-              <Checkbox.Group>
-                <Row>
-                  <Col span={24}>
-                    <Checkbox value="A">A</Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="B">B</Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="C">C</Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="D">D</Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="E">E</Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="F">F</Checkbox>
-                  </Col>
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-            <Divider />
-            <Form.Item label="Khoảng giá" labelCol={{ span: "24" }}>
-              <div className="price-range">
-                <Form.Item name={["range", "from"]}>
-                  <InputNumber
-                    name="from"
-                    min={0}
-                    placeholder="đ Từ"
-                    formatter={(value) =>
-                      `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-                    }
-                  />
-                </Form.Item>
-                <span>-</span>
-                <Form.Item name={["range", "to"]}>
-                  <InputNumber
-                    name="to"
-                    min={0}
-                    placeholder="đ Đến"
-                    formatter={(value) =>
-                      `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-                    }
-                  />
-                </Form.Item>
-              </div>
-              <div className="btn-apply">
-                <Button type="primary">Áp dụng</Button>
-              </div>
-            </Form.Item>
-            <Divider />
-            <Form.Item label="Đánh giá" labelCol={{ span: 24 }}>
-              <div className="rate-item">
-                <Rate defaultValue={5} disabled />
-                <span className="rate-text">Từ 5 sao</span>
-              </div>
-              <div className="rate-item">
-                <Rate defaultValue={4} disabled />
-                <span className="rate-text">Từ 4 sao</span>
-              </div>
-              <div className="rate-item">
-                <Rate defaultValue={3} disabled />
-                <span className="rate-text">Từ 3 sao</span>
-              </div>
-              <div className="rate-item">
-                <Rate defaultValue={2} disabled />
-                <span className="rate-text">Từ 2 sao</span>
-              </div>
-              <div className="rate-item">
-                <Rate defaultValue={1} disabled />
-                <span className="rate-text">Từ 1 sao</span>
-              </div>
-            </Form.Item>
-          </Form>
+              <Form.Item
+                name="category"
+                label="Danh mục sản phẩm"
+                labelCol={{ span: "24" }}
+              >
+                <Checkbox.Group>
+                  <Row>
+                    {optionCategory &&
+                      optionCategory.length > 0 &&
+                      optionCategory.map((item, index) => (
+                        <Col key={index} span={24} style={{ padding: "4px" }}>
+                          <Checkbox value={item.value}>{item.label}</Checkbox>
+                        </Col>
+                      ))}
+                  </Row>
+                </Checkbox.Group>
+              </Form.Item>
+              <Divider />
+              <Form.Item label="Khoảng giá" labelCol={{ span: "24" }}>
+                <div className="price-range">
+                  <Form.Item name={["range", "from"]}>
+                    <InputNumber
+                      name="from"
+                      min={0}
+                      placeholder="đ Từ"
+                      formatter={(value) =>
+                        `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                      }
+                    />
+                  </Form.Item>
+                  <span>-</span>
+                  <Form.Item name={["range", "to"]}>
+                    <InputNumber
+                      name="to"
+                      min={0}
+                      placeholder="đ Đến"
+                      formatter={(value) =>
+                        `${value}`.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                      }
+                    />
+                  </Form.Item>
+                </div>
+                <div className="btn-apply">
+                  <Button
+                    type="primary"
+                    size="middle"
+                    onClick={() => form.submit()}
+                  >
+                    Áp dụng
+                  </Button>
+                </div>
+              </Form.Item>
+              <Divider />
+              <Form.Item label="Đánh giá" labelCol={{ span: 24 }}>
+                <div className="rate-item">
+                  <Rate defaultValue={5} disabled />
+                  <span className="rate-text">Từ 5 sao</span>
+                </div>
+                <div className="rate-item">
+                  <Rate defaultValue={4} disabled />
+                  <span className="rate-text">Từ 4 sao</span>
+                </div>
+                <div className="rate-item">
+                  <Rate defaultValue={3} disabled />
+                  <span className="rate-text">Từ 3 sao</span>
+                </div>
+                <div className="rate-item">
+                  <Rate defaultValue={2} disabled />
+                  <span className="rate-text">Từ 2 sao</span>
+                </div>
+                <div className="rate-item">
+                  <Rate defaultValue={1} disabled />
+                  <span className="rate-text">Từ 1 sao</span>
+                </div>
+              </Form.Item>
+            </Form>
+          </div>
         </Col>
         <Col sm={24} md={20} style={{ paddingRight: "0" }}>
           <div className="homepage-content">
@@ -157,187 +247,46 @@ const Home = () => {
                 onChange={onChangeTabs}
               />
             </Row>
-            <Row className="customize-row">
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
+            <Spin spinning={isLoading} tip="loading...">
+              <Row className="customize-row">
+                {listBook &&
+                  listBook.length > 0 &&
+                  listBook.map((book) => (
+                    <div className="column" key={book._id}>
+                      <div className="wrapper">
+                        <div className="thumbnail">
+                          <img src={`${URL_BACKEND}${book.thumbnail}`} />
+                        </div>
+                        <div className="content">
+                          <div className="text">{book.mainText}</div>
+                          <span className="price">
+                            {new Intl.NumberFormat("vi-VI", {
+                              style: "currency",
+                              currency: "vnd",
+                            }).format(book.price)}
+                          </span>
+                          <div className="rating">
+                            <Rate
+                              defaultValue={5}
+                              style={{ color: "#ffce3d", fontSize: 10 }}
+                            />
+                            Đã bán {book.sold}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="column">
-                <div className="wrapper">
-                  <div className="thumbnail">
-                    <img src="http://localhost:8080//images/book/15-afa213ab31cefd06d49b977a2f4ab594.jpg" />
-                  </div>
-                  <div className="content">
-                    <div className="text">
-                      Truyện Tranh Đam Mỹ - Làm Dâu Nhà Sói - Hana Inu
-                    </div>
-                    <span className="price">
-                      {new Intl.NumberFormat("vi-VI", {
-                        style: "currency",
-                        currency: "vnd",
-                      }).format(70000)}
-                    </span>
-                    <div className="rating">
-                      <Rate
-                        defaultValue={5}
-                        style={{ color: "#ffce3d", fontSize: 10 }}
-                      />
-                      Đã bán 1k
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Row>
+                  ))}
+              </Row>
+            </Spin>
             <Divider />
             <Row style={{ display: "flex", justifyContent: "center" }}>
-              <Pagination defaultCurrent={6} total={500} responsive />
+              <Pagination
+                onChange={onChangePaginate}
+                current={current}
+                total={total}
+                pageSize={pageSize}
+                responsive
+              />
             </Row>
           </div>
           <Footer />

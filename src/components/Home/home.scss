@@ -9,26 +9,32 @@
     font-size: 16px !important;
   }
   .homepage-sidebar {
-    background-color: #fff;
-    padding: 24px 24px 12px 36px;
-    border-radius: 8px;
     max-height: 100vh;
     position: sticky;
-    overflow-y: hidden;
     top: 16px;
-    .filter-sidebar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      line-height: 1.5;
-
-      .icon-filter {
+    padding-right: 0 !important;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    .sidebar-wrapper {
+      border-radius: 8px;
+      background-color: #fff;
+      padding: 24px 24px 60px 16px;
+      .filter-sidebar {
         display: flex;
         align-items: center;
-        gap: 2px;
-        font-size: 18px;
-        span {
+        justify-content: space-between;
+        line-height: 1.5;
+
+        .icon-filter {
           display: flex;
+          align-items: center;
+          gap: 2px;
+          font-size: 18px;
+          span {
+            display: flex;
+          }
         }
       }
     }
@@ -45,6 +51,10 @@
 
   .btn-apply {
     margin-top: 24px;
+    width: 100%;
+    .ant-btn {
+      width: 100%;
+    }
   }
 
   .ant-divider {
@@ -73,6 +83,7 @@
       .column {
         width: calc(20% - 16px);
         .wrapper {
+          min-height: 325px;
           padding: 8px;
           cursor: pointer;
           box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.1);
@@ -80,6 +91,8 @@
           .thumbnail {
             img {
               width: 100%;
+              height: 210px;
+              object-fit: cover;
             }
           }
           .content {
@@ -87,6 +100,12 @@
             .text {
               text-align: left;
               margin-bottom: 4px;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;
+              line-height: 1.5;
+              min-height: 40px;
             }
             .price {
               color: rgb(255, 66, 78);
