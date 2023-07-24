@@ -50,7 +50,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="header-logo">
+      <div className="header-logo" onClick={() => navigate("/")}>
         <span>
           <FaReact />
         </span>

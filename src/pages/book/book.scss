@@ -4,6 +4,11 @@
   padding: 16px 15px;
   margin: 16px 30px 16px 30px;
 
+  .original-image,
+  .thumbnail-image {
+    cursor: pointer;
+  }
+
   .bookpage-loading {
     background-color: #fff;
     padding: 16px 15px;
@@ -13,6 +18,7 @@
     background-color: #fff;
     padding: 24px 12px;
     border-radius: 12px;
+    max-height: 100vh;
 
     .bookpage-content {
       .author {

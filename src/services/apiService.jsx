@@ -90,6 +90,10 @@ const updateBook = (values, id) => {
   });
 };
 
+const getBookDetail = (id) => {
+  return axios.get(`api/v1/book/${id}`);
+};
+
 export {
   postRegister,
   postLogin,
@@ -106,4 +110,5 @@ export {
   uploadImageBook,
   postCreateNewBook,
   updateBook,
+  getBookDetail,
 };
