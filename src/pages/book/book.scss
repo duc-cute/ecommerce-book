@@ -1,10 +1,18 @@
 /** @format */
 
 .bookpage-container {
-  padding: 16px 24px;
+  padding: 16px 15px;
+  margin: 16px 30px 16px 30px;
+
+  .bookpage-loading {
+    background-color: #fff;
+    padding: 16px 15px;
+  }
+
   .bookpage-wrapper {
     background-color: #fff;
-    padding: 16px 24px;
+    padding: 24px 12px;
+    border-radius: 12px;
 
     .bookpage-content {
       .author {
@@ -56,15 +64,19 @@
         .btn-quantity {
           display: flex;
           align-items: center;
-          .quantity-product {
-            height: 30px;
-            color: rgb(36, 36, 36);
-            font-size: 14px;
+          input {
+            width: 50px;
+            height: 32px;
+            border-left: 0;
+            border-right: 0;
+            font-size: 16px;
+            font-weight: 400;
+            box-sizing: border-box;
             text-align: center;
+            cursor: text;
+            border-radius: 0;
+            border: 1px solid rgba(0, 0, 0, 0.09);
             outline: none;
-            width: 40px;
-            border: 1px solid rgb(236, 236, 236);
-            line-height: 1.15;
           }
           button {
             cursor: pointer;
@@ -98,16 +110,37 @@
           border: 1px solid #d0011b;
           color: rgb(255, 66, 78);
           background-color: rgba(208, 1, 27, 0.1);
+          cursor: pointer;
+          &:hover {
+            opacity: 0.8;
+          }
         }
 
         .shopping-now {
           padding: 16px 24px;
-          border: 1px solid #ddd;
-          // d0011b
           background-color: rgb(255, 66, 78);
           color: #fff;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.9;
+          }
         }
       }
     }
+  }
+}
+.modal-gallery-container {
+  .image-item {
+    min-width: 140px;
+    .ant-image {
+      height: 84px;
+      .active {
+        border: 3px solid #d0011b !important;
+      }
+    }
+  }
+
+  .title-modal {
+    margin-bottom: 4px;
   }
 }
