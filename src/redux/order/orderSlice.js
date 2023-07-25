@@ -1,7 +1,6 @@
 /** @format */
 
 import { createSlice } from "@reduxjs/toolkit";
-import { message } from "antd";
 
 const initialState = {
   carts: [],
@@ -21,21 +20,20 @@ export const orderSlice = createSlice({
       if (isExistIndex > -1) {
         carts[isExistIndex].quantity =
           carts[isExistIndex].quantity + item.quantity;
-        if (
-          carts[isExistIndex].quantity > carts[isExistIndex].detail.quantity
-        ) {
-          carts[isExistIndex].quantity = carts[isExistIndex].detail.quantity;
-        }
+        // if (
+        //   carts[isExistIndex].quantity > carts[isExistIndex].detail.quantity
+        // ) {
+        //   carts[isExistIndex].quantity = carts[isExistIndex].detail.quantity;
+        // }
       } else {
         carts.push({
           quantity: item.quantity,
           _id: item._id,
-          detail: item.detail,
+          // detail: item.detail,
         });
       }
 
       state.carts = carts;
-      message.success("Thêm thành công sản phẩm vào giỏ hàng.");
     },
   },
 
