@@ -1,6 +1,6 @@
 /** @format */
 
-import { Avatar, Badge, Dropdown, Input, Space, message } from "antd";
+import { Avatar, Badge, Dropdown, Input, Popover, Space, message } from "antd";
 import { FaReact } from "react-icons/fa";
 import { VscSearchFuzzy } from "react-icons/vsc";
 import { GiShoppingCart } from "react-icons/gi";
@@ -14,10 +14,47 @@ const Header = () => {
   const account = useSelector((state) => state.account);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { carts } = useSelector((state) => state.cart);
+  console.log("cart", carts);
 
   const url = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
     account.user.avatar
   }`;
+
+  const URL_BACKEND = "http://localhost:8080//images/book/";
+
+  const contentPopover = () => {
+    return (
+      <div className="wrapper">
+        <ul className="content">
+          {carts.length === 0 ? (
+            <li>Chưa có sản phẩm nào cả</li>
+          ) : (
+            <>
+              {carts.map((item, index) => (
+                <li key={`popover-${index}`} className="item">
+                  <div className="img">
+                    <img src={`${URL_BACKEND}${item.detail.thumbnail}`} />
+                  </div>
+                  <div className="name">
+                    <p>{item.detail.mainText}</p>
+                  </div>
+                  <div className="price">
+                    <span>
+                      {new Intl.NumberFormat("vi-VI", {
+                        style: "currency",
+                        currency: "vnd",
+                      }).format(item.detail.price)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </>
+          )}
+        </ul>
+      </div>
+    );
+  };
 
   const handleLogout = async () => {
     const res = await postLogout();
@@ -64,11 +101,23 @@ const Header = () => {
         />
       </div>
       <div className="header-account">
-        <Badge count={5} size="small">
-          <span className="header-badge">
-            <GiShoppingCart />
-          </span>
-        </Badge>
+        <Popover
+          placement="bottomRight"
+          title="Sản phẩm mới thêm"
+          content={contentPopover}
+          trigger="click"
+          rootClassName="popover-badge"
+        >
+          <Badge
+            showZero
+            count={carts && carts.length > 0 ? carts.length : 0}
+            size="small"
+          >
+            <span className="header-badge">
+              <GiShoppingCart />
+            </span>
+          </Badge>
+        </Popover>
         {account?.isAuthenticated ? (
           <>
             <Dropdown
