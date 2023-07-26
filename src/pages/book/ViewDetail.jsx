@@ -47,7 +47,7 @@ const ViewDetail = ({ dataBook }) => {
   const handleAddCart = (quantity, book) => {
     dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
   };
-
+  const onChangeInput = () => {};
   console.log("curr", currQuantity);
 
   return (
@@ -96,6 +96,7 @@ const ViewDetail = ({ dataBook }) => {
                   <input
                     onClick={(e) => handleChangeInput(e.target.value)}
                     value={currQuantity}
+                    onChange={onChangeInput}
                   />
                   <button onClick={() => handleChangeButton("PLUS")}>
                     <PlusOutlined />

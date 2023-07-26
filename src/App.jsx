@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import LoginPage from "./pages/login";
+import OrderPage from "./pages/order";
 import ContactPage from "./pages/contact";
 import BookPage from "./pages/book";
 import Header from "./components/Header";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "contact",
         element: <ContactPage />,
+      },
+      {
+        path: "order",
+        element: <OrderPage />,
       },
       {
         path: "book/:slug",

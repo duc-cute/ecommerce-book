@@ -11,8 +11,8 @@ const Footer = () => {
           bottom: "0",
           left: "0",
           right: "0",
-          background: "#f5f5fa",
-
+          // background: "#f5f5fa",
+          background: "#fff",
           position: "absolute",
         }}
       >
