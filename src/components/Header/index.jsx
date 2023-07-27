@@ -88,10 +88,16 @@ const Header = () => {
   ];
 
   if (account.user.role === "ADMIN") {
-    items.unshift({
-      label: <Link to="/admin">Trang Quản Trị</Link>,
-      key: "0",
-    });
+    items.unshift(
+      {
+        label: <Link to="/admin">Trang Quản Trị</Link>,
+        key: "0",
+      },
+      {
+        label: <Link to="/history">Lịch sử mua hàng</Link>,
+        key: "3",
+      }
+    );
   }
 
   return (

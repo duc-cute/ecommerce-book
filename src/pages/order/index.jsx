@@ -6,10 +6,11 @@ import Footer from "../../components/Footer";
 import ViewOrder from "./ViewOrder";
 import { useState } from "react";
 import Payment from "./Payment";
+import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
   const [step, setStep] = useState(0);
-  console.log("step", step);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -40,7 +41,11 @@ const OrderPage = () => {
           <Result
             icon={<SmileOutlined />}
             title="Đặt hàng thành công!"
-            extra={<Button type="primary">Lịch sử</Button>}
+            extra={
+              <Button type="primary" onClick={() => navigate("/history")}>
+                Lịch sử
+              </Button>
+            }
           />
         )}
       </div>

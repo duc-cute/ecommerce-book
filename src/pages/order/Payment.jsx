@@ -1,14 +1,30 @@
 /** @format */
 
-import { Col, Divider, Form, Input, Radio, Row } from "antd";
+import {
+  Col,
+  Divider,
+  Form,
+  Input,
+  Radio,
+  Row,
+  message,
+  notification,
+} from "antd";
 import { FaTrash } from "react-icons/fa";
 import "./order.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { doDeleteCartAction } from "../../redux/order/orderSlice";
+import {
+  doDeleteCartAction,
+  doPlaceCartAction,
+} from "../../redux/order/orderSlice";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import { LoadingOutlined } from "@ant-design/icons";
+import { postNewOrder } from "../../services/apiService";
 const Payment = ({ setStep }) => {
+  const [form] = Form.useForm();
   const [total, setTotal] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
   const URL_BACKEND = "http://localhost:8080//images/book/";
 
@@ -25,7 +41,38 @@ const Payment = ({ setStep }) => {
     setTotal(total);
   }, [carts]);
 
-  const onFinish = (values) => {};
+  const onFinish = async (values) => {
+    setIsSubmit(true);
+    const detailOrder = carts.map((item) => {
+      return {
+        bookName: item.detail.mainText,
+        quantity: item.quantity,
+        _id: item._id,
+      };
+    });
+    console.log("value", values);
+    const info = {
+      name: values.username,
+      address: values.address,
+      phone: values.phone,
+      totalPrice: total,
+      detail: detailOrder,
+    };
+
+    const res = await postNewOrder(info);
+    setIsSubmit(false);
+    if (res && res.data) {
+      console.log("res", res.data);
+      message.success("Đặt hàng thành công");
+      dispatch(doPlaceCartAction());
+      setStep(2);
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: `${res.message}`,
+      });
+    }
+  };
 
   return (
     <Row gutter={20}>
@@ -73,12 +120,10 @@ const Payment = ({ setStep }) => {
           <div className="pay-pages">
             <div className="pay-container">
               <Form
+                form={form}
                 name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 24 }}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
-                autoComplete="off"
                 className="pay-form"
               >
                 <Form.Item
@@ -110,33 +155,39 @@ const Payment = ({ setStep }) => {
                 >
                   <TextArea rows={4} />
                 </Form.Item>
-
-                <Form.Item
-                  labelCol={{ span: 24 }}
-                  label="Phương thức thanhh toán"
-                  name="optionPay"
-                >
-                  <Radio value="payment-online">Thanh toán khi nhận hàng</Radio>
-                </Form.Item>
-                <Divider />
-                <div
-                  className="total-payment"
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <label>Tổng tiền</label>
-                  <span style={{ fontSize: "24px", color: "#ff424e" }}>
-                    {new Intl.NumberFormat("vi-VI", {
-                      style: "currency",
-                      currency: "vnd",
-                    }).format(total)}
-                  </span>
-                </div>
-                <Divider />
-
-                <button className="shopping-btn" onClick={() => setStep(2)}>
-                  Đặt hàng({carts.length})
-                </button>
               </Form>
+
+              <Radio checked className="payment-online">
+                Thanh toán khi nhận hàng
+              </Radio>
+              <Divider />
+              <div
+                className="total-payment"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <label>Tổng tiền</label>
+                <span style={{ fontSize: "24px", color: "#ff424e" }}>
+                  {new Intl.NumberFormat("vi-VI", {
+                    style: "currency",
+                    currency: "vnd",
+                  }).format(total)}
+                </span>
+              </div>
+              <Divider />
+
+              <button
+                disabled={isSubmit}
+                className="shopping-btn"
+                onClick={() => form.submit()}
+              >
+                {isSubmit && (
+                  <span>
+                    <LoadingOutlined />
+                    &nbsp;
+                  </span>
+                )}
+                Đặt hàng({carts.length})
+              </button>
             </div>
           </div>
         </div>

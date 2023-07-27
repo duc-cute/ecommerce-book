@@ -94,6 +94,17 @@ const getBookDetail = (id) => {
   return axios.get(`api/v1/book/${id}`);
 };
 
+//Order
+const postNewOrder = (data) => {
+  return axios.post("api/v1/order", {
+    ...data,
+  });
+};
+
+const getHistoryOrder = () => {
+  return axios.get("api/v1/history");
+};
+
 export {
   postRegister,
   postLogin,
@@ -111,4 +122,6 @@ export {
   postCreateNewBook,
   updateBook,
   getBookDetail,
+  postNewOrder,
+  getHistoryOrder,
 };

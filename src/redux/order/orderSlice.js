@@ -59,12 +59,19 @@ export const orderSlice = createSlice({
       state.carts = carts;
       message.success("Xóa thành công đơn hàng khỏi giỏ hàng!");
     },
+    doPlaceCartAction: (state, action) => {
+      state.carts = [];
+    },
   },
 
   extraReducers: (builder) => {},
 });
 
-export const { doAddBookAction, doUpdateCartAction, doDeleteCartAction } =
-  orderSlice.actions;
+export const {
+  doAddBookAction,
+  doUpdateCartAction,
+  doDeleteCartAction,
+  doPlaceCartAction,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;

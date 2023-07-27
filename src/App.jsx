@@ -20,6 +20,7 @@ import LayoutAdmin from "./components/Admin/LayoutAdmin";
 import UserTable from "./components/Admin/User/UserTable";
 import "./styles/App.scss";
 import BookTable from "./components/Admin/Book/BookTable";
+import History from "./pages/history";
 
 const Layout = () => {
   return (
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
         path: "book/:slug",
         element: <BookPage />,
       },
+      {
+        path: "history",
+        element: <History />,
+      },
     ],
   },
   {
@@ -73,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "book",
         element: <BookTable />,
+      },
+      {
+        path: "history",
+        element: <History />,
       },
     ],
   },
