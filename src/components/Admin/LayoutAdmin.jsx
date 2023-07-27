@@ -24,7 +24,7 @@ import {
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
-import { doLogout } from "../../redux/account/accountSlice";
+import { doLogoutAction } from "../../redux/account/accountSlice";
 
 function getItem(label, key, icon, children) {
   return {
@@ -62,7 +62,7 @@ const LayoutAdmin = () => {
     const res = await postLogout();
     if (res && res.data) {
       message.success("Đăng xuất thành công");
-      dispatch(doLogout());
+      dispatch(doLogoutAction());
       navigate("/");
     }
   };

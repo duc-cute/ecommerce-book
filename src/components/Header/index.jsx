@@ -9,9 +9,11 @@ import "./header.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/apiService";
-import { doLogout } from "../../redux/account/accountSlice";
+import { doLogoutAction } from "../../redux/account/accountSlice";
 import { useState } from "react";
+import AccountModal from "../Account";
 const Header = () => {
+  const [openAcc, setOpenAcc] = useState(false);
   const [visiblePopover, setVisiblePopover] = useState(false);
   const account = useSelector((state) => state.account);
   const { carts } = useSelector((state) => state.cart);
@@ -70,7 +72,7 @@ const Header = () => {
 
     if (res && res.data) {
       message.success("Đăng xuất thành công");
-      dispatch(doLogout());
+      dispatch(doLogoutAction());
       navigate("/");
     }
     console.log("res", res);
@@ -78,7 +80,7 @@ const Header = () => {
 
   let items = [
     {
-      label: <label>Quản lý tài khoản</label>,
+      label: <label onClick={() => setOpenAcc(true)}>Quản lý tài khoản</label>,
       key: "1",
     },
     {
@@ -101,67 +103,70 @@ const Header = () => {
   }
 
   return (
-    <header className="header">
-      <div className="header-logo" onClick={() => navigate("/")}>
-        <span>
-          <FaReact />
-        </span>
-        <div>Hoi Dan IT</div>
-      </div>
-      <div className="header-search">
-        <Input
-          size="large"
-          placeholder="Bạn cần tìm gì"
-          prefix={<VscSearchFuzzy />}
-        />
-      </div>
-      <div className="header-account">
-        <Popover
-          placement="bottomRight"
-          title="Sản phẩm mới thêm"
-          content={contentPopover}
-          trigger="click"
-          open={visiblePopover}
-          rootClassName="popover-badge"
-          onOpenChange={(newOpen) => setVisiblePopover(newOpen)}
-          showArrow={true}
-        >
-          <Badge
-            showZero
-            count={carts && carts.length > 0 ? carts.length : 0}
-            size="small"
-          >
-            <span className="header-badge">
-              <GiShoppingCart />
-            </span>
-          </Badge>
-        </Popover>
-        {account?.isAuthenticated ? (
-          <>
-            <Dropdown
-              menu={{
-                items,
-              }}
-              trigger={["click"]}
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>
-                  <Avatar src={url} /> {account?.user?.fullName}
-                  <DownOutlined />
-                </Space>
-              </a>
-            </Dropdown>
-          </>
-        ) : (
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/login")}
-          >
-            Tài khoản
+    <>
+      <header className="header">
+        <div className="header-logo" onClick={() => navigate("/")}>
+          <span>
+            <FaReact />
           </span>
-        )}
-      </div>
-    </header>
+          <div>Hoi Dan IT</div>
+        </div>
+        <div className="header-search">
+          <Input
+            size="large"
+            placeholder="Bạn cần tìm gì"
+            prefix={<VscSearchFuzzy />}
+          />
+        </div>
+        <div className="header-account">
+          <Popover
+            placement="bottomRight"
+            title="Sản phẩm mới thêm"
+            content={contentPopover}
+            trigger="click"
+            open={visiblePopover}
+            rootClassName="popover-badge"
+            onOpenChange={(newOpen) => setVisiblePopover(newOpen)}
+            showArrow={true}
+          >
+            <Badge
+              showZero
+              count={carts && carts.length > 0 ? carts.length : 0}
+              size="small"
+            >
+              <span className="header-badge">
+                <GiShoppingCart />
+              </span>
+            </Badge>
+          </Popover>
+          {account?.isAuthenticated ? (
+            <>
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                trigger={["click"]}
+              >
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <Avatar src={url} /> {account?.user?.fullName}
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            </>
+          ) : (
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/login")}
+            >
+              Tài khoản
+            </span>
+          )}
+        </div>
+      </header>
+      <AccountModal open={openAcc} setOpen={setOpenAcc} />
+    </>
   );
 };
 

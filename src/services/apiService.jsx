@@ -105,6 +105,28 @@ const getHistoryOrder = () => {
   return axios.get("api/v1/history");
 };
 
+const updateInfoUser = (fullName, avatar, phone, _id) => {
+  return axios.put("api/v1/user", {
+    fullName,
+    avatar,
+    phone,
+    _id,
+  });
+};
+
+const uploadAvatar = (fileImg) => {
+  const formData = new FormData();
+  formData.append("fileImg", fileImg);
+  return axios({
+    method: "POST",
+    url: "api/v1/file/upload",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "Upload-type": "avatar",
+    },
+  });
+};
 export {
   postRegister,
   postLogin,
@@ -124,4 +146,6 @@ export {
   getBookDetail,
   postNewOrder,
   getHistoryOrder,
+  updateInfoUser,
+  uploadAvatar,
 };
