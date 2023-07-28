@@ -23,6 +23,8 @@ import {
 } from "../../services/apiService";
 import { useNavigate } from "react-router-dom";
 import slug from "slug";
+import { useOutletContext } from "react-router-dom";
+import useDebounce from "../../hooks/useDebounce";
 const Home = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -37,6 +39,9 @@ const Home = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const URL_BACKEND = "http://localhost:8080//images/book/";
+
+  const [queryHeader, setQueryHeader] = useOutletContext();
+  const querySearch = useDebounce(queryHeader, 300);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -62,6 +67,10 @@ const Home = () => {
       query += `&${sortQuery}`;
     }
 
+    if (querySearch) {
+      query += `&mainText=/${querySearch}/i`;
+    }
+
     const res = await getBookWithPaginate(query);
     setIsLoading(false);
 
@@ -73,7 +82,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchDataBook();
-  }, [current, pageSize, sortQuery, filter]);
+  }, [current, pageSize, sortQuery, querySearch, filter]);
 
   const onChangePaginate = (curr, pageS) => {
     if (current !== curr) {

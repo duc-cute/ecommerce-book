@@ -12,7 +12,7 @@ import { postLogout } from "../../services/apiService";
 import { doLogoutAction } from "../../redux/account/accountSlice";
 import { useState } from "react";
 import AccountModal from "../Account";
-const Header = () => {
+const Header = ({ setQueryHeader }) => {
   const [openAcc, setOpenAcc] = useState(false);
   const [visiblePopover, setVisiblePopover] = useState(false);
   const account = useSelector((state) => state.account);
@@ -75,7 +75,6 @@ const Header = () => {
       dispatch(doLogoutAction());
       navigate("/");
     }
-    console.log("res", res);
   };
 
   let items = [
@@ -84,23 +83,25 @@ const Header = () => {
       key: "1",
     },
     {
+      label: <Link to="/history">Lịch sử mua hàng</Link>,
+      key: "3",
+    },
+    {
       label: <label onClick={handleLogout}>Đăng xuất</label>,
       key: "2",
     },
   ];
 
   if (account.user.role === "ADMIN") {
-    items.unshift(
-      {
-        label: <Link to="/admin">Trang Quản Trị</Link>,
-        key: "0",
-      },
-      {
-        label: <Link to="/history">Lịch sử mua hàng</Link>,
-        key: "3",
-      }
-    );
+    items.unshift({
+      label: <Link to="/admin">Trang Quản Trị</Link>,
+      key: "0",
+    });
   }
+
+  const hanleOnchange = (value) => {
+    setQueryHeader(value);
+  };
 
   return (
     <>
@@ -116,6 +117,7 @@ const Header = () => {
             size="large"
             placeholder="Bạn cần tìm gì"
             prefix={<VscSearchFuzzy />}
+            onChange={(e) => hanleOnchange(e.target.value)}
           />
         </div>
         <div className="header-account">

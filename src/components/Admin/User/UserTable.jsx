@@ -187,7 +187,11 @@ const UserTable = () => {
   return (
     <>
       <div className="admin-input-search">
-        <InputSearch fetchDataUser={fetchDataUser} setFilter={setFilter} />
+        <InputSearch
+          fetchDataUser={fetchDataUser}
+          setFilter={setFilter}
+          setCurrent={setCurrent}
+        />
       </div>
       <div className="admin-table-user">
         <Table

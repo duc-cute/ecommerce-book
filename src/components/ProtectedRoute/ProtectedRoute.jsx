@@ -11,7 +11,8 @@ const RoleBaseRoute = ({ children }) => {
 
   return (
     <>
-      {isAdminRoute && userRole === "ADMIN" ? (
+      {(isAdminRoute && userRole === "ADMIN") ||
+      (!isAdminRoute && (userRole === "USER" || userRole === "ADMIN")) ? (
         <>{children}</>
       ) : (
         <NotPermitted />

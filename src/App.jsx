@@ -1,7 +1,7 @@
 /** @format */
 
 import "./styles/App.scss";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { doGetAccountAction } from "./redux/account/accountSlice";
@@ -24,10 +24,12 @@ import History from "./pages/history";
 import OrderTable from "./components/Admin/Order";
 
 const Layout = () => {
+  const [queryHeader, setQueryHeader] = useState("");
+  console.log("query", queryHeader);
   return (
     <div className="layout-app">
-      <Header />
-      <Outlet />
+      <Header setQueryHeader={setQueryHeader} />
+      <Outlet context={[queryHeader, setQueryHeader]} />
     </div>
   );
 };
@@ -45,16 +47,25 @@ const router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        path: "order",
-        element: <OrderPage />,
-      },
-      {
         path: "book/:slug",
         element: <BookPage />,
       },
+
+      {
+        path: "order",
+        element: (
+          <ProtectedRoute>
+            <OrderPage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "history",
-        element: <History />,
+        element: (
+          <ProtectedRoute>
+            <History />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

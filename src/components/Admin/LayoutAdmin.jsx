@@ -21,10 +21,11 @@ import {
   message,
   Avatar,
 } from "antd";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { postLogout } from "../../services/apiService";
 import { useDispatch, useSelector } from "react-redux";
 import { doLogoutAction } from "../../redux/account/accountSlice";
+import { useEffect } from "react";
 
 function getItem(label, key, icon, children) {
   return {
@@ -35,14 +36,14 @@ function getItem(label, key, icon, children) {
   };
 }
 const items = [
-  getItem(<Link to="/admin">DashBoard</Link>, "1", <LuLayoutDashboard />),
-  getItem(<label>Manage User</label>, "sub1", <FaRegUserCircle />, [
-    getItem(<Link to="/admin/user">CRUD</Link>, "3"),
+  getItem(<Link to="/admin">DashBoard</Link>, "/admin", <LuLayoutDashboard />),
+  getItem(<label>Manage User</label>, "manageUser", <FaRegUserCircle />, [
+    getItem(<Link to="/admin/user">CRUD</Link>, "/admin/user"),
   ]),
-  getItem(<Link to="/admin/book">Manage Book</Link>, "sub2", <FaBook />),
+  getItem(<Link to="/admin/book">Manage Book</Link>, "/admin/book", <FaBook />),
   getItem(
     <Link to="/admin/order">Manage Orders</Link>,
-    "9",
+    "/admin/order",
     <RiMoneyPoundCircleLine />
   ),
 ];
@@ -60,6 +61,9 @@ const LayoutAdmin = () => {
   const url = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
     account.user.avatar
   }`;
+
+  let location = useLocation();
+  const [current, setCurrent] = useState(location.pathname);
 
   const handleLogout = async () => {
     const res = await postLogout();
@@ -84,7 +88,13 @@ const LayoutAdmin = () => {
       key: "2",
     },
   ];
-
+  useEffect(() => {
+    if (location) {
+      if (current !== location.pathname) {
+        setCurrent(location.pathname);
+      }
+    }
+  }, [location, current]);
   return (
     <div className="admin-layout-container">
       <Layout>
@@ -98,7 +108,7 @@ const LayoutAdmin = () => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={current}
             items={items}
           />
         </Sider>

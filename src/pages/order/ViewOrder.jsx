@@ -1,17 +1,20 @@
 /** @format */
 
-import { Col, Divider, InputNumber, Row } from "antd";
-import { FaTrash } from "react-icons/fa";
 import "./order.scss";
+import { Button, Col, Divider, InputNumber, Result, Row } from "antd";
+import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { SmileOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   doDeleteCartAction,
   doUpdateCartAction,
 } from "../../redux/order/orderSlice";
-import { useEffect, useState } from "react";
 
 const ViewOrder = ({ setStep }) => {
   const [total, setTotal] = useState(false);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const URL_BACKEND = "http://localhost:8080//images/book/";
 
@@ -39,49 +42,63 @@ const ViewOrder = ({ setStep }) => {
   return (
     <Row gutter={20}>
       <Col xs={24} sm={24} md={18} className="list-item">
-        {carts &&
-          carts.length > 0 &&
-          carts.map((item) => (
-            <div className="wrapper-item" key={`item-${item._id}`}>
-              <div className="book-item">
-                <div className="image">
-                  <img src={`${URL_BACKEND}${item.detail.thumbnail}`} />
+        {carts && carts.length > 0 ? (
+          <>
+            {carts.map((item) => (
+              <div className="wrapper-item" key={`item-${item._id}`}>
+                <div className="book-item">
+                  <div className="image">
+                    <img src={`${URL_BACKEND}${item.detail.thumbnail}`} />
+                  </div>
+                  <p className="name">{item.detail.mainText}</p>
                 </div>
-                <p className="name">{item.detail.mainText}</p>
-              </div>
-              <div className="info">
-                <div className="group">
-                  <span className="price">
+                <div className="info">
+                  <div className="group">
+                    <span className="price">
+                      {new Intl.NumberFormat("vi-VI", {
+                        style: "currency",
+                        currency: "vnd",
+                      }).format(item.detail.price)}
+                    </span>
+                    <div className="quantity">
+                      <InputNumber
+                        style={{ width: "100px" }}
+                        value={item.quantity}
+                        min={0}
+                        onChange={(value) => hanldeChangeInput(value, item)}
+                      />
+                    </div>
+                  </div>
+                  <span className="total">
+                    Tổng&nbsp;
                     {new Intl.NumberFormat("vi-VI", {
                       style: "currency",
                       currency: "vnd",
-                    }).format(item.detail.price)}
+                    }).format(item.detail.price * item.quantity)}
                   </span>
-                  <div className="quantity">
-                    <InputNumber
-                      style={{ width: "100px" }}
-                      value={item.quantity}
-                      min={0}
-                      onChange={(value) => hanldeChangeInput(value, item)}
-                    />
-                  </div>
+                  <span
+                    className="delete"
+                    onClick={() => dispatch(doDeleteCartAction(item._id))}
+                  >
+                    <FaTrash />
+                  </span>
                 </div>
-                <span className="total">
-                  Tổng&nbsp;
-                  {new Intl.NumberFormat("vi-VI", {
-                    style: "currency",
-                    currency: "vnd",
-                  }).format(item.detail.price * item.quantity)}
-                </span>
-                <span
-                  className="delete"
-                  onClick={() => dispatch(doDeleteCartAction(item._id))}
-                >
-                  <FaTrash />
-                </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </>
+        ) : (
+          <>
+            <Result
+              icon=<SmileOutlined />
+              title="Chưa có đơn hàng nào hãy thêm đơn hàng cho mình!"
+              extra={
+                <Button type="primary" onClick={() => navigate("/")}>
+                  Go home
+                </Button>
+              }
+            />
+          </>
+        )}
       </Col>
 
       <Col md={6}>
@@ -107,9 +124,19 @@ const ViewOrder = ({ setStep }) => {
           </div>
           <Divider />
 
-          <button className="shopping-btn" onClick={() => setStep(1)}>
+          <Button
+            className="shopping-btn"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "20px 0",
+            }}
+            onClick={() => setStep(1)}
+            disabled={carts.length === 0}
+          >
             Mua hàng({carts.length})
-          </button>
+          </Button>
         </div>
       </Col>
     </Row>

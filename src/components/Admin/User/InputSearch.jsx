@@ -2,7 +2,8 @@
 
 import { Input, Form, Button } from "antd";
 
-const InputSearch = ({ fetchDataUser, setFilter }) => {
+const InputSearch = ({ fetchDataUser, setFilter, setCurrent }) => {
+  const [form] = Form.useForm();
   const onFinish = (values) => {
     let query = "";
     if (values.username) {
@@ -16,6 +17,7 @@ const InputSearch = ({ fetchDataUser, setFilter }) => {
     }
 
     if (query) {
+      setCurrent(1);
       setFilter(query);
     }
   };
@@ -23,6 +25,7 @@ const InputSearch = ({ fetchDataUser, setFilter }) => {
   return (
     <>
       <Form
+        form={form}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 24 }}
@@ -61,7 +64,15 @@ const InputSearch = ({ fetchDataUser, setFilter }) => {
           <Button type="primary" htmlType="submit">
             Search
           </Button>
-          <Button onClick={fetchDataUser}>Clear</Button>
+          <Button
+            onClick={() => {
+              form.resetFields();
+              fetchDataUser();
+              setFilter("");
+            }}
+          >
+            Clear
+          </Button>
         </Form.Item>
       </Form>
     </>
