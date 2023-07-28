@@ -105,6 +105,15 @@ const getHistoryOrder = () => {
   return axios.get("api/v1/history");
 };
 
+const getOrderWithPaginate = (query) => {
+  return axios.get(`api/v1/order?${query}`);
+};
+
+const getDashBoard = () => {
+  return axios.get("api/v1/database/dashboard");
+};
+
+//Account
 const updateInfoUser = (fullName, avatar, phone, _id) => {
   return axios.put("api/v1/user", {
     fullName,
@@ -123,10 +132,19 @@ const uploadAvatar = (fileImg) => {
     data: formData,
     headers: {
       "Content-Type": "multipart/form-data",
-      "Upload-type": "avatar",
+      "upload-type": "avatar",
     },
   });
 };
+
+const changePassword = (email, oldpass, newpass) => {
+  return axios.post("api/v1/user/change-password", {
+    email,
+    oldpass,
+    newpass,
+  });
+};
+
 export {
   postRegister,
   postLogin,
@@ -148,4 +166,7 @@ export {
   getHistoryOrder,
   updateInfoUser,
   uploadAvatar,
+  changePassword,
+  getDashBoard,
+  getOrderWithPaginate,
 };

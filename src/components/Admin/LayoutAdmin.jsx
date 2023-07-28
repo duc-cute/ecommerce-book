@@ -38,10 +38,13 @@ const items = [
   getItem(<Link to="/admin">DashBoard</Link>, "1", <LuLayoutDashboard />),
   getItem(<label>Manage User</label>, "sub1", <FaRegUserCircle />, [
     getItem(<Link to="/admin/user">CRUD</Link>, "3"),
-    getItem(<label>Alex</label>, "5"),
   ]),
   getItem(<Link to="/admin/book">Manage Book</Link>, "sub2", <FaBook />),
-  getItem(<label>Manage Orders</label>, "9", <RiMoneyPoundCircleLine />),
+  getItem(
+    <Link to="/admin/order">Manage Orders</Link>,
+    "9",
+    <RiMoneyPoundCircleLine />
+  ),
 ];
 
 const LayoutAdmin = () => {

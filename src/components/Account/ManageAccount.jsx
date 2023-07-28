@@ -26,7 +26,9 @@ const ManageAccount = () => {
   const [userAvatar, setUserAvatar] = useState(account?.user?.avatar ?? "");
   const dispatch = useDispatch();
 
-  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}images/avatar/${
+  const URL_BACKEND = "http://localhost:8080//";
+
+  const urlAvatar = `${URL_BACKEND}images/avatar/${
     tempAvatar || account?.user?.avatar
   }`;
 
@@ -53,9 +55,11 @@ const ManageAccount = () => {
 
   const onFinish = async ({ fullName, phone, _id }) => {
     const res = await updateInfoUser(fullName, userAvatar, phone, _id);
+
     if (res && res.data) {
       dispatch(doUpdateUserInfoAction({ avatar: userAvatar, phone, fullName }));
       message.success("Cập nhật người dùng thành công");
+
       localStorage.removeItem("access_token");
     } else {
       notification.error({
