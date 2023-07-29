@@ -90,7 +90,7 @@ const ViewOrder = ({ setStep }) => {
           <>
             {
               <Result
-                icon=<SmileOutlined />
+                icon={<SmileOutlined />}
                 title="Chưa có đơn hàng nào hãy thêm đơn hàng cho mình!"
                 extra={
                   <Button type="primary" onClick={() => navigate("/")}>
