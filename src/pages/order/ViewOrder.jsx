@@ -87,17 +87,15 @@ const ViewOrder = ({ setStep }) => {
             ))}
           </>
         ) : (
-          <>
-            <Result
-              icon=<SmileOutlined />
-              title="Chưa có đơn hàng nào hãy thêm đơn hàng cho mình!"
-              extra={
-                <Button type="primary" onClick={() => navigate("/")}>
-                  Go home
-                </Button>
-              }
-            />
-          </>
+          <Result
+            icon=<SmileOutlined />
+            title="Chưa có đơn hàng nào hãy thêm đơn hàng cho mình!"
+            extra={
+              <Button type="primary" onClick={() => navigate("/")}>
+                Go home
+              </Button>
+            }
+          />
         )}
       </Col>
 
