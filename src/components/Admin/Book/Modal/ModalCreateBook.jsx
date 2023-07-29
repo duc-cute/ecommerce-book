@@ -187,7 +187,7 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
   return (
     <>
       <Modal
-        title=<label>Thêm Mới Book</label>
+        title={<label>Thêm Mới Book</label>}
         open={open}
         onOk={() => form.submit()}
         okText="Tạo mới"

@@ -248,7 +248,7 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data, setData }) => {
   return (
     <>
       <Modal
-        title=<label>Update Book</label>
+        title={<label>Update Book</label>}
         open={open}
         onOk={() => form.submit()}
         okText="Cập nhật"

@@ -40,7 +40,7 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
     <>
       <Modal
         forceRender
-        title=<label>Thêm Mới Người Dùng</label>
+        title={<label>Thêm Mới Người Dùng</label>}
         open={open}
         onOk={() => form.submit()}
         onCancel={() => setOpen(false)}

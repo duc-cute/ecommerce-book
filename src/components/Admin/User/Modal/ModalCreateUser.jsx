@@ -43,7 +43,7 @@ const ModalCreateUser = ({ open, setOpen, fetchDataUser }) => {
   return (
     <>
       <Modal
-        title=<label>Thêm Mới Người Dùng</label>
+        title={<label>Thêm Mới Người Dùng</label>}
         open={open}
         onOk={() => form.submit()}
         onCancel={() => setOpen(false)}
