@@ -35,7 +35,6 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
 
   const [dataThumbNail, setDataThumbNail] = useState([]);
   const [dataSlider, setDataSlider] = useState([]);
-  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     const fetchDataCategory = async () => {

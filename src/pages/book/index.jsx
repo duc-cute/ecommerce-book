@@ -9,7 +9,7 @@ const BookPage = () => {
   let location = useLocation();
   let params = new URLSearchParams(location.search);
   const id = params?.get("id");
-  const URL_BACKEND = "http://localhost:8080//";
+  const URL_BACKEND = `${import.meta.env.VITE_BACKEND_URL}`;
 
   const [dataBook, setDataBook] = useState({});
 
@@ -28,8 +28,8 @@ const BookPage = () => {
     items = [raw?.thumbnail, ...raw?.slider];
     items = items.map((item) => {
       return {
-        original: `${URL_BACKEND}images/book/${item}`,
-        thumbnail: `${URL_BACKEND}images/book/${item}`,
+        original: `${URL_BACKEND}/images/book/${item}`,
+        thumbnail: `${URL_BACKEND}/images/book/${item}`,
         originalClass: "original-image",
         thumbnailClass: "thumbnail-image",
         originalHeight: 400,

@@ -11,7 +11,6 @@ const ChangePassWord = () => {
     const res = await changePassword(email, oldPassword, newPassword);
     if (res && res.data) {
       message.success("Đổi mật khẩu thành công");
-      console.log("ré", res);
     } else {
       notification.error({
         message: "Đã có lỗi xảy ra!!!",

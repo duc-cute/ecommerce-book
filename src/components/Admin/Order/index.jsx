@@ -95,7 +95,6 @@ const OrderTable = () => {
     const res = await getOrderWithPaginate(query);
     if (res && res.data) {
       setIsLoading(false);
-      console.log("rés", res.data);
 
       setListUser(res.data.result);
       setTotal(res.data.meta.total);

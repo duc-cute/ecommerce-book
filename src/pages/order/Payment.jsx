@@ -26,7 +26,7 @@ const Payment = ({ setStep }) => {
   const [total, setTotal] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const dispatch = useDispatch();
-  const URL_BACKEND = "http://localhost:8080//images/book/";
+  const URL_BACKEND = `${import.meta.env.VITE_BACKEND_URL}/images/book/`;
 
   const { carts } = useSelector((state) => state.cart);
   const user = useSelector((state) => state.account.user);
@@ -50,7 +50,6 @@ const Payment = ({ setStep }) => {
         _id: item._id,
       };
     });
-    console.log("value", values);
     const info = {
       name: values.username,
       address: values.address,
@@ -62,7 +61,6 @@ const Payment = ({ setStep }) => {
     const res = await postNewOrder(info);
     setIsSubmit(false);
     if (res && res.data) {
-      console.log("res", res.data);
       message.success("Đặt hàng thành công");
       dispatch(doPlaceCartAction());
       setStep(2);

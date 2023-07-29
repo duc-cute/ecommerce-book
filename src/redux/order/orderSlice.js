@@ -12,7 +12,6 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {
     doAddBookAction: (state, action) => {
-      console.log("state", state.cart);
       let carts = state.carts;
       const item = action.payload;
 

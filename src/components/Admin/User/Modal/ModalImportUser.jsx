@@ -53,7 +53,6 @@ const ModalImportUser = ({ open, setOpen, fetchDataUser }) => {
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {
-        console.log("file", info.file);
       }
       if (status === "done") {
         message.success(`${info.file.name} file uploaded successfully.`);
@@ -62,9 +61,7 @@ const ModalImportUser = ({ open, setOpen, fetchDataUser }) => {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
+    onDrop(e) {},
   };
 
   const handleUpload = (f) => {
@@ -82,7 +79,6 @@ const ModalImportUser = ({ open, setOpen, fetchDataUser }) => {
       });
       if (dataParse) {
         setDataImport(dataParse);
-        console.log("dtI", dataImport);
       }
     };
     reader.readAsArrayBuffer(f);

@@ -57,7 +57,6 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data, setData }) => {
 
   useEffect(() => {
     if (data?._id) {
-      console.log("dât", data);
       const imgThumbnail = [
         {
           uid: uuidv4(),
@@ -190,7 +189,6 @@ const ModalUpdateBook = ({ open, setOpen, fetchDataBook, data, setData }) => {
       });
       return;
     }
-    console.log("dttn", dataThumbNail);
     let thumbnail = dataThumbNail[0].name;
     let slider = dataSlider.map((item) => item.name);
 

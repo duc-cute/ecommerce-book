@@ -38,7 +38,7 @@ const Home = () => {
   const [total, setTotal] = useState(0);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const URL_BACKEND = "http://localhost:8080//images/book/";
+  const URL_BACKEND = `${import.meta.env.VITE_BACKEND_URL}/images/book/`;
 
   const [queryHeader, setQueryHeader] = useOutletContext();
   const querySearch = useDebounce(queryHeader, 300);

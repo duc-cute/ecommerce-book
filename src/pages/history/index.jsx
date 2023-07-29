@@ -64,7 +64,6 @@ const History = () => {
     };
     fetchListOrder();
   }, []);
-  console.log("h", listOrder);
 
   return (
     <div className="history-page-container">

@@ -17,7 +17,6 @@ const ModalUpdateUser = ({ open, setOpen, fetchDataUser, data, setData }) => {
       setIsSubmit(true);
       const res = await updateUser(values._id, values.fullName, values.phone);
 
-      console.log("res up", res);
       setIsSubmit(false);
       if (res && res.data) {
         notification.success({

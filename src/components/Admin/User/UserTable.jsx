@@ -169,7 +169,6 @@ const UserTable = () => {
 
   const handleDelete = async (record) => {
     const res = await deleteUser(record._id);
-    console.log("res", res);
     if (res && res.data) {
       notification.success({
         message: "Deleted User successfully",

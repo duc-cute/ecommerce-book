@@ -26,9 +26,7 @@ const ManageAccount = () => {
   const [userAvatar, setUserAvatar] = useState(account?.user?.avatar ?? "");
   const dispatch = useDispatch();
 
-  const URL_BACKEND = "http://localhost:8080//";
-
-  const urlAvatar = `${URL_BACKEND}images/avatar/${
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
     tempAvatar || account?.user?.avatar
   }`;
 

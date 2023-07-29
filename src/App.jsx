@@ -25,7 +25,6 @@ import OrderTable from "./components/Admin/Order";
 
 const Layout = () => {
   const [queryHeader, setQueryHeader] = useState("");
-  console.log("query", queryHeader);
   return (
     <div className="layout-app">
       <Header setQueryHeader={setQueryHeader} />

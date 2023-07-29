@@ -11,7 +11,6 @@ const ModalGallery = ({ open, setOpen, current, items, title }) => {
   const handleCancel = () => {
     setOpen(false);
   };
-  console.log("current", current);
 
   return (
     <Modal

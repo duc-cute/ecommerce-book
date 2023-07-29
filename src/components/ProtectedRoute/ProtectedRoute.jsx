@@ -23,7 +23,6 @@ const RoleBaseRoute = ({ children }) => {
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-  console.log("isAuthe", isAuthenticated);
   return (
     <>
       {isAuthenticated ? (

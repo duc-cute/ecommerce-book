@@ -48,7 +48,6 @@ const ViewDetail = ({ dataBook }) => {
     dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
   };
   const onChangeInput = () => {};
-  console.log("curr", currQuantity);
 
   return (
     <div className="bookpage-container">

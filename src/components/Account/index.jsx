@@ -10,9 +10,7 @@ const AccountModal = ({ open, setOpen }) => {
     setOpen(false);
   };
 
-  const onChange = (key) => {
-    // console.log(key);
-  };
+  const onChange = (key) => {};
 
   const items = [
     {

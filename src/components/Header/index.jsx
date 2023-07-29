@@ -19,11 +19,11 @@ const Header = ({ setQueryHeader }) => {
   const { carts } = useSelector((state) => state.cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const url = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
-    account.user.avatar
-  }`;
 
-  const URL_BACKEND = "http://localhost:8080//images/book/";
+  const URL_BACKEND = import.meta.env.VITE_BACKEND_URL;
+  const url = `${URL_BACKEND}/images/avatar/${account.user.avatar}`;
+
+  const URL_THUMNAIL = `${URL_BACKEND}/images/book/`;
 
   const contentPopover = () => {
     return (
@@ -36,7 +36,7 @@ const Header = ({ setQueryHeader }) => {
               {carts.map((item, index) => (
                 <li key={`popover-${index}`} className="item">
                   <div className="img">
-                    <img src={`${URL_BACKEND}${item.detail.thumbnail}`} />
+                    <img src={`${URL_THUMNAIL}${item.detail.thumbnail}`} />
                   </div>
                   <div className="name">
                     <p>{item.detail.mainText}</p>
@@ -131,15 +131,17 @@ const Header = ({ setQueryHeader }) => {
             onOpenChange={(newOpen) => setVisiblePopover(newOpen)}
             showArrow={true}
           >
-            <Badge
-              showZero
-              count={carts && carts.length > 0 ? carts.length : 0}
-              size="small"
-            >
-              <span className="header-badge">
-                <GiShoppingCart />
-              </span>
-            </Badge>
+            <div>
+              <Badge
+                showZero
+                count={carts && carts.length > 0 ? carts.length : 0}
+                size="small"
+              >
+                <span className="header-badge">
+                  <GiShoppingCart />
+                </span>
+              </Badge>
+            </div>
           </Popover>
           {account?.isAuthenticated ? (
             <>

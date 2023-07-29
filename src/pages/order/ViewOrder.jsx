@@ -16,7 +16,7 @@ const ViewOrder = ({ setStep }) => {
   const [total, setTotal] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const URL_BACKEND = "http://localhost:8080//images/book/";
+  const URL_BACKEND = `${import.meta.env.VITE_BACKEND_URL}/images/book/`;
 
   const hanldeChangeInput = (value, book) => {
     if (!value || value < 0) return;
