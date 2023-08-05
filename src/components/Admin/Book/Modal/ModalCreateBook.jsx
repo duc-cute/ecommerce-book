@@ -53,7 +53,9 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
   }, []);
 
   const handleUploadFileThumbNail = async ({ file, onSuccess, onError }) => {
+    console.log("file", file);
     const res = await uploadImageBook(file);
+    console.log("res", res);
     if (res && res.data) {
       setDataThumbNail([
         {
@@ -309,7 +311,6 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
                 labelCol={{ span: 24 }}
                 label="Ảnh Thumbnail"
                 name="thumbnail"
-                valuePropName="fileList"
               >
                 <Upload
                   maxCount={1}
@@ -333,7 +334,6 @@ const ModalCreateBook = ({ open, setOpen, fetchDataBook }) => {
                 labelCol={{ span: 24 }}
                 label="Ảnh Slider"
                 name="slider"
-                valuePropName="fileList"
               >
                 <Upload
                   beforeUpload={beforeUpload}
