@@ -222,7 +222,7 @@ const Home = () => {
       </div>
       {showSideBar && (
         <Drawer
-          title=<span style={{ fontWeight: 500 }}>Lọc sản phẩm</span>
+          title={<span style={{ fontWeight: 500 }}>Lọc sản phẩm</span>}
           placement="right"
           closable={() => setShowSideBar(false)}
           closeIcon={<CloseOutlined />}
