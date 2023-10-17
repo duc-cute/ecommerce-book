@@ -19,7 +19,7 @@ const LoginPage = () => {
       );
   };
   const onFinish = (values) => {
-    if (validateEmail(values.username) || !values.password) {
+    if (validateEmail(values.username) || values.password) {
       handlePostLogin(values);
     }
   };
@@ -82,7 +82,7 @@ const LoginPage = () => {
           </Form.Item>
           <Divider plain>Or</Divider>
           <div className="form-help">
-            Chưa có tài khoản ?{" "}
+            Chưa có tài khoản ?
             <a onClick={() => navigate("/register")}>Đăng ký</a>
           </div>
         </Form>
