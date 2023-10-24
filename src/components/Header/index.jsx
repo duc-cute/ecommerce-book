@@ -4,6 +4,7 @@ import { Avatar, Badge, Dropdown, Input, Popover, Space, message } from "antd";
 import { FaReact } from "react-icons/fa";
 import { VscSearchFuzzy } from "react-icons/vsc";
 import { GiShoppingCart } from "react-icons/gi";
+import { AiOutlineMenu } from "react-icons/ai";
 import { DownOutlined } from "@ant-design/icons";
 import "./header.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +13,7 @@ import { postLogout } from "../../services/apiService";
 import { doLogoutAction } from "../../redux/account/accountSlice";
 import { useState } from "react";
 import AccountModal from "../Account";
-const Header = ({ setQueryHeader }) => {
+const Header = ({ setQueryHeader, setShowSideBar }) => {
   const [openAcc, setOpenAcc] = useState(false);
   const [visiblePopover, setVisiblePopover] = useState(false);
   const account = useSelector((state) => state.account);
@@ -34,11 +35,11 @@ const Header = ({ setQueryHeader }) => {
           ) : (
             <>
               {carts.map((item, index) => (
-                <li key={`popover-${index}`} className="item">
+                <li key={`popover-${index}`} className="item ">
                   <div className="img">
                     <img src={`${URL_THUMNAIL}${item.detail.thumbnail}`} />
                   </div>
-                  <div className="name">
+                  <div className="name line-clamp">
                     <p>{item.detail.mainText}</p>
                   </div>
                   <div className="price">
@@ -110,7 +111,12 @@ const Header = ({ setQueryHeader }) => {
           <span>
             <FaReact />
           </span>
-          <div>Hoi Dan IT</div>
+          <div>Book Dev</div>
+        </div>
+        <div className="header-menu-mobile">
+          <span onClick={() => setShowSideBar(true)}>
+            <AiOutlineMenu />
+          </span>
         </div>
         <div className="header-search">
           <Input
@@ -130,6 +136,7 @@ const Header = ({ setQueryHeader }) => {
             rootClassName="popover-badge"
             onOpenChange={(newOpen) => setVisiblePopover(newOpen)}
             showArrow={true}
+            className="header-cart"
           >
             <div>
               <Badge
@@ -143,30 +150,32 @@ const Header = ({ setQueryHeader }) => {
               </Badge>
             </div>
           </Popover>
-          {account?.isAuthenticated ? (
-            <>
-              <Dropdown
-                menu={{
-                  items,
-                }}
-                trigger={["click"]}
+          <div className="header-account-user">
+            {account?.isAuthenticated ? (
+              <>
+                <Dropdown
+                  menu={{
+                    items,
+                  }}
+                  trigger={["click"]}
+                >
+                  <a onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      <Avatar src={url} /> {account?.user?.fullName}
+                      <DownOutlined />
+                    </Space>
+                  </a>
+                </Dropdown>
+              </>
+            ) : (
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/login")}
               >
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    <Avatar src={url} /> {account?.user?.fullName}
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            </>
-          ) : (
-            <span
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate("/login")}
-            >
-              Tài khoản
-            </span>
-          )}
+                Tài khoản
+              </span>
+            )}
+          </div>
         </div>
       </header>
       <AccountModal open={openAcc} setOpen={setOpenAcc} />

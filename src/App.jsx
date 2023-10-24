@@ -25,10 +25,13 @@ import OrderTable from "./components/Admin/Order";
 
 const Layout = () => {
   const [queryHeader, setQueryHeader] = useState("");
+  const [showSideBar, setShowSideBar] = useState(false);
   return (
     <div className="layout-app">
-      <Header setQueryHeader={setQueryHeader} />
-      <Outlet context={[queryHeader, setQueryHeader]} />
+      <Header setQueryHeader={setQueryHeader} setShowSideBar={setShowSideBar} />
+      <Outlet
+        context={[queryHeader, setQueryHeader, showSideBar, setShowSideBar]}
+      />
     </div>
   );
 };

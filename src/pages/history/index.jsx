@@ -1,10 +1,12 @@
 /** @format */
 
-import { Table, Tag } from "antd";
+import { Breadcrumb, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { getHistoryOrder } from "../../services/apiService";
 import moment from "moment";
 import ReactJson from "react-json-view";
+import { HomeOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const History = () => {
   const [listOrder, setListOrder] = useState([]);
@@ -65,16 +67,42 @@ const History = () => {
     fetchListOrder();
   }, []);
 
+  const itemsBreadcrumb = [
+    {
+      title: (
+        <Link to="/">
+          <HomeOutlined />
+        </Link>
+      ),
+    },
+    {
+      title: <span style={{ fontWeight: 500 }}>Lịch sử mua hàng</span>,
+    },
+  ];
+
   return (
-    <div className="history-page-container">
-      <Table
-        title={() => <h2>Lịch sử mua hàng</h2>}
-        rowKey={"_id"}
-        dataSource={listOrder}
-        columns={columns}
-      />
-      ;
-    </div>
+    <>
+      <div
+        className="breadcrum-block"
+        style={{
+          margin: "24px 30px 8px 12px",
+
+          maxWidth: "80%",
+          display: "flex",
+        }}
+      >
+        <Breadcrumb items={itemsBreadcrumb} />
+      </div>
+      <div className="history-page-container">
+        <Table
+          // title={() => <h2>Lịch sử mua hàng</h2>}
+          rowKey={"_id"}
+          dataSource={listOrder}
+          columns={columns}
+        />
+        ;
+      </div>
+    </>
   );
 };
 

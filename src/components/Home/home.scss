@@ -5,6 +5,20 @@
   margin-top: 24px;
   padding: 0 20px;
 
+  .breadcrum-block {
+    margin-bottom: 8px;
+
+    .ant-breadcrumb {
+      ol {
+        align-items: center;
+      }
+    }
+
+    .breadcrumb-item {
+      font-weight: 600;
+      font-size: 16px;
+    }
+  }
   label {
     font-size: 16px !important;
   }
@@ -79,6 +93,7 @@
     .customize-row {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 20px 10px;
       .column {
         width: calc(20% - 16px);
@@ -121,6 +136,83 @@
           }
         }
       }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .ant-drawer {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    .ant-drawer-content-wrapper {
+      transition: none;
+      position: fixed;
+      width: 340px !important;
+
+      .ant-drawer-content {
+        margin-left: 80px;
+        height: 100vh;
+        height: 100%;
+        // width: auto !important;
+        overflow-y: auto;
+        max-height: 100vh;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        .ant-drawer-wrapper-body {
+          position: absolute;
+          // background: #fff;
+          height: 100vh;
+          top: 0;
+          right: 0;
+          bottom: 0;
+
+          .price-range {
+            display: flex;
+            gap: 2;
+            align-items: center;
+            padding-bottom: 12px;
+
+            .ant-form-item {
+              margin-bottom: 0;
+              .ant-input-number {
+                width: 100%;
+              }
+            }
+            .seperate {
+              margin-left: 6px;
+              margin-right: 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .homepage-container {
+    .ant-col {
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+    }
+    .homepage-content {
+      padding: 12px;
+      .customize-row {
+        .column {
+          width: calc(50% - 16px);
+        }
+      }
+    }
+  }
+  .filter-sidebar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    .icon-filter {
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
   }
 }
