@@ -15,6 +15,7 @@ const DetailUser = ({ open, setOpen, data }) => {
       onClose={onClose}
       open={open}
       size="large"
+      width={740}
     >
       <Descriptions column={2} title="User Info" bordered>
         <Descriptions.Item label="Id">{data?._id}</Descriptions.Item>
