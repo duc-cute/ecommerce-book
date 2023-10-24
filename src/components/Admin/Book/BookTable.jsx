@@ -42,8 +42,9 @@ const BookTable = () => {
       render: (text, record, index) => {
         return (
           <a
-            href="#"
-            onClick={() => {
+            href="#!"
+            onClick={(e) => {
+              e.preventDefault();
               setShowViewDetail(true);
               setDataViewDetail(record);
             }}
